@@ -1,0 +1,7 @@
+-- cmplx_phasor.vhd
+--
+-- Created on: 13 Jul 2017
+--     Author: Fabian Meyer
+--
+-- Component that implements the complex phasor (complex rotation vector)
+--
