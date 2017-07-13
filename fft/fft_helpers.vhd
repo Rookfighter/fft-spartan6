@@ -21,14 +21,14 @@ use ieee_proposed.fixed_pkg.all;
 package fft_helpers is
 
     -- define decimal and fractional length of fixed point numbers
-    constant DECLEN := 12;
-    constant FRACLEN := 12;
+    constant DECLEN: natural := 12;
+    constant FRACLEN: natural := 12;
 
     -- define complex number datatype, which will make the code more readable
     type complex is
         record
-            r: sfixed(DECLEN downto -FRACLEN);
-            i: sfixed(DECLEN downto -FRACLEN);
+            r: sfixed(DECLEN-1 downto -FRACLEN);
+            i: sfixed(DECLEN-1 downto -FRACLEN);
         end record;
 
     type comp_array is array (0 to 7) of complex;
@@ -49,30 +49,30 @@ package body fft_helpers is
         variable sum: complex;
     begin
         -- simply use fixed point arithmetic addition
-        sum.r := n1.r + n2.r;
-        sum.i := n1.i + n2.i;
+        sum.r := resize(n1.r + n2.r, DECLEN-1, -FRACLEN);
+        sum.i := resize(n1.i + n2.i, DECLEN-1, -FRACLEN);
         return sum;
     end add;
 
     --subtraction of complex numbers.
-    function sub(n1,n2 : complex) return complex is
-        variable diff : complex;
+    function sub(n1,n2: complex) return complex is
+        variable diff: complex;
     begin
         -- simply use fixed point arithmetic subtraction
-        diff.r:=n1.r - n2.r;
-        diff.i:=n1.i - n2.i;
+        diff.r := resize(n1.r - n2.r, DECLEN-1, -FRACLEN);
+        diff.i := resize(n1.i - n2.i, DECLEN-1, -FRACLEN);
         return diff;
     end sub;
 
     --multiplication of complex numbers.
-    function mult(n1,n2 : complex) return complex is
-        variable prod : complex;
+    function mult(n1,n2: complex) return complex is
+        variable prod: complex;
     begin
         -- complex multiplication: A + jB * C + jD
         -- can be calculated as
         -- (A*C) - (B*D) + j((A*D) + (B*C))
-        prod.r:=(n1.r * n2.r) - (n1.i * n2.i);
-        prod.i:=(n1.r * n2.i) + (n1.i * n2.r);
+        prod.r := resize((n1.r * n2.r) - (n1.i * n2.i), DECLEN-1, -FRACLEN);
+        prod.i := resize((n1.r * n2.i) + (n1.i * n2.r), DECLEN-1, -FRACLEN);
         return prod;
     end mult;
 
