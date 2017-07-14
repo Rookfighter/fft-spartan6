@@ -22,8 +22,8 @@ use ieee.math_real.all;
 package fft_helpers is
 
     -- define decimal and fractional length of fixed point numbers
-    constant DECLEN: natural := 10;
-    constant FRACLEN: natural := 9;
+    constant DECLEN: natural  := 12;
+    constant FRACLEN: natural := 12;
 
     -- define complex number datatype, which will make the code more readable
     type complex is
