@@ -12,25 +12,27 @@
 -- http://vhdlguru.blogspot.de/2011/06/non-synthesisable-vhdl-code-for-8-point.html
 
 library ieee;
-library ieee_proposed;
+library work;
 
 use ieee.std_logic_1164.all;
-use ieee_proposed.fixed_pkg.all;
-use ieee.math_real.all;
+use ieee.numeric_std.all;
 
 -- declare package with helper functions for FFT
 package fft_helpers is
 
     -- define decimal and fractional length of fixed point numbers
-    constant DECLEN: natural  := 12;
-    constant FRACLEN: natural := 12;
+    constant DECLEN:  natural := 8;
+    constant FRACLEN: natural := 7;
+    constant FIXZERO: signed(DECLEN+FRACLEN-1 downto 0) := (others => '0');
 
     -- define complex number datatype, which will make the code more readable
     type complex is
         record
-            r: sfixed(DECLEN-1 downto -FRACLEN);
-            i: sfixed(DECLEN-1 downto -FRACLEN);
+            r: signed(DECLEN+FRACLEN-1 downto 0);
+            i: signed(DECLEN+FRACLEN-1 downto 0);
         end record;
+
+    constant COMPZERO: complex := (FIXZERO, FIXZERO);
 
     type val_arr_fft8 is array (0 to 7) of complex;
     type phas_arr_fft8 is array (0 to 3) of complex;
@@ -41,55 +43,50 @@ package fft_helpers is
     function sub (n1,n2: complex) return complex;
     -- Multiplies two complex numbers
     function mult (n1,n2: complex) return complex;
-    --
-    function to_fft_fixed(n: real) return sfixed;
-    function to_complex(r,i: real) return complex;
+
+    function to_complex(r,i: std_logic_vector) return complex;
 
 end fft_helpers;
 
 package body fft_helpers is
 
     function add (n1,n2: complex) return complex is
-        variable sum: complex;
+        variable res: complex;
     begin
         -- simply use fixed point arithmetic addition
-        sum.r := resize(n1.r + n2.r, DECLEN-1, -FRACLEN);
-        sum.i := resize(n1.i + n2.i, DECLEN-1, -FRACLEN);
-        return sum;
+        res.r := resize(n1.r + n2.r, DECLEN+FRACLEN);
+        res.i := resize(n1.i + n2.i, DECLEN+FRACLEN);
+        return res;
     end add;
 
     --subtraction of complex numbers.
     function sub(n1,n2: complex) return complex is
-        variable diff: complex;
+        variable res: complex;
     begin
         -- simply use fixed point arithmetic subtraction
-        diff.r := resize(n1.r - n2.r, DECLEN-1, -FRACLEN);
-        diff.i := resize(n1.i - n2.i, DECLEN-1, -FRACLEN);
-        return diff;
+        res.r := resize(n1.r - n2.r, DECLEN+FRACLEN);
+        res.i := resize(n1.i - n2.i, DECLEN+FRACLEN);
+        return res;
     end sub;
 
     --multiplication of complex numbers.
     function mult(n1,n2: complex) return complex is
-        variable prod: complex;
+        variable res: complex;
     begin
         -- complex multiplication: A + jB * C + jD
         -- can be calculated as
-        -- (A*C) - (B*D) + j((A*D) + (B*C))
-        prod.r := resize((n1.r * n2.r) - (n1.i * n2.i), DECLEN-1, -FRACLEN);
-        prod.i := resize((n1.r * n2.i) + (n1.i * n2.r), DECLEN-1, -FRACLEN);
-        return prod;
+        -- re: (A*C) - (B*D)
+        -- im: (A*D) + (B*C)
+        res.r := resize((n1.r * n2.r) - (n1.i * n2.i), DECLEN+FRACLEN);
+        res.i := resize((n1.r * n2.i) + (n1.i * n2.r), DECLEN+FRACLEN);
+        return res;
     end mult;
 
-    function to_fft_fixed(n: real) return sfixed is
-    begin
-        return to_sfixed(n, DECLEN-1, -FRACLEN);
-    end to_fft_fixed;
-
-    function to_complex(r,i: real) return complex is
+    function to_complex(r,i: std_logic_vector) return complex is
         variable res: complex;
     begin
-        res.r := to_fft_fixed(r);
-        res.i := to_fft_fixed(i);
+        res.r := signed(r);
+        res.i := signed(i);
         return res;
     end;
 

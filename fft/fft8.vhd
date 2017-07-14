@@ -26,18 +26,18 @@ architecture behavioral of fft8 is
              dout2: out complex); -- second complex out val
     end component;
 
-    signal g1: val_arr_fft8 := (others => to_complex(0.0, 0.0));
-    signal g2: val_arr_fft8 := (others => to_complex(0.0,0.0));
+    signal g1: val_arr_fft8 := (others => COMPZERO);
+    signal g2: val_arr_fft8 := (others => COMPZERO);
 
     -- complex phasor W_N = e**(-j*2*pi/N)
     -- W_N**i = cos(2*pi*i/N) - j*sin(2*pi*i/N)
     --
     -- (1.0,0.0), (0.7071,-0.7071), (0.0,-1.0), (-0.7071,-0.7071)
     constant w: phas_arr_fft8 := (
-        (to_complex(1.0, 0.0)),
-        (to_complex(0.7071, -0.7071)),
-        (to_complex(0.0, -1.0)),
-        (to_complex(-0.7071, -0.7071)));
+        (COMPZERO),
+        (COMPZERO),
+        (COMPZERO),
+        (COMPZERO));
 
 begin
     --first stage of butterfly's.
