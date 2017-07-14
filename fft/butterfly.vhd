@@ -6,10 +6,10 @@
 -- Butterfly component for the FFT.
 
 library ieee;
-use ieee.std_logic_1164.all;
-
 library work;
-use work.fft_helpers.ALL;
+
+use ieee.std_logic_1164.all;
+use work.fft_helpers.all;
 
 entity butterfly is
     port(din1:  in  complex;  -- first complex in val

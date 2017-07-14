@@ -12,17 +12,18 @@
 -- http://vhdlguru.blogspot.de/2011/06/non-synthesisable-vhdl-code-for-8-point.html
 
 library ieee;
-use ieee.std_logic_1164.all;
-
 library ieee_proposed;
+
+use ieee.std_logic_1164.all;
 use ieee_proposed.fixed_pkg.all;
+use ieee.math_real.all;
 
 -- declare package with helper functions for FFT
 package fft_helpers is
 
     -- define decimal and fractional length of fixed point numbers
-    constant DECLEN: natural := 12;
-    constant FRACLEN: natural := 12;
+    constant DECLEN: natural := 10;
+    constant FRACLEN: natural := 9;
 
     -- define complex number datatype, which will make the code more readable
     type complex is
@@ -31,8 +32,8 @@ package fft_helpers is
             i: sfixed(DECLEN-1 downto -FRACLEN);
         end record;
 
-    type comp_array is array (0 to 7) of complex;
-    type comp_array2 is array (0 to 3) of complex;
+    type val_arr_fft8 is array (0 to 7) of complex;
+    type phas_arr_fft8 is array (0 to 3) of complex;
 
     -- Adds two complex numbers
     function add (n1,n2: complex) return complex;
@@ -40,6 +41,9 @@ package fft_helpers is
     function sub (n1,n2: complex) return complex;
     -- Multiplies two complex numbers
     function mult (n1,n2: complex) return complex;
+    --
+    function to_fft_fixed(n: real) return sfixed;
+    function to_complex(r,i: real) return complex;
 
 end fft_helpers;
 
@@ -75,5 +79,18 @@ package body fft_helpers is
         prod.i := resize((n1.r * n2.i) + (n1.i * n2.r), DECLEN-1, -FRACLEN);
         return prod;
     end mult;
+
+    function to_fft_fixed(n: real) return sfixed is
+    begin
+        return to_sfixed(n, DECLEN-1, -FRACLEN);
+    end to_fft_fixed;
+
+    function to_complex(r,i: real) return complex is
+        variable res: complex;
+    begin
+        res.r := to_fft_fixed(r);
+        res.i := to_fft_fixed(i);
+        return res;
+    end;
 
 end fft_helpers;
