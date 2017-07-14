@@ -71,14 +71,38 @@ package body fft_helpers is
 
     --multiplication of complex numbers.
     function mult(n1,n2: complex) return complex is
+        -- variable ac: signed(DECLEN+FRACLEN-1 downto 0);
+        -- variable bd: signed(DECLEN+FRACLEN-1 downto 0);
         variable res: complex;
     begin
         -- complex multiplication: A + jB * C + jD
         -- can be calculated as
         -- re: (A*C) - (B*D)
         -- im: (A*D) + (B*C)
-        res.r := resize((n1.r * n2.r) - (n1.i * n2.i), DECLEN+FRACLEN);
-        res.i := resize((n1.r * n2.i) + (n1.i * n2.r), DECLEN+FRACLEN);
+        res.r := resize(resize(n1.r * n2.r, DECLEN+FRACLEN) -
+                        resize(n1.i * n2.i, DECLEN+FRACLEN),
+                        DECLEN+FRACLEN);
+        res.i := resize(resize(n1.r * n2.i, DECLEN+FRACLEN) +
+                        resize(n1.i * n2.r, DECLEN+FRACLEN),
+                        DECLEN+FRACLEN);
+
+        -- complex multiplication: A + jB * C + jD
+        -- can be calculated as
+        -- re: (A*C) - (B*D)
+        -- im: (A+B) * (C+D) - (A*C) - (B*D)
+        -- ac := resize(n1.r * n2.r, DECLEN+FRACLEN);
+        -- bd := resize(n1.i * n2.i, DECLEN+FRACLEN);
+        --
+        -- res.r := resize(ac - bd, DECLEN+FRACLEN);
+        -- res.i := resize(
+        --     resize(
+        --         resize(
+        --             resize(n1.r + n1.i, DECLEN+FRACLEN) *
+        --             resize(n2.r + n2.i, DECLEN+FRACLEN),
+        --             DECLEN+FRACLEN) -
+        --         ac, DECLEN+FRACLEN) -
+        --     bd, DECLEN+FRACLEN);
+
         return res;
     end mult;
 
