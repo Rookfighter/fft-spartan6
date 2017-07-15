@@ -12,7 +12,6 @@
 -- http://vhdlguru.blogspot.de/2011/06/non-synthesisable-vhdl-code-for-8-point.html
 
 library ieee;
-library work;
 
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
