@@ -5,15 +5,17 @@
 --
 -- This package provides a complex datatype and associated helper functions
 -- for easier computation of a FFT. Operations are implemented using fixed
--- point arithmetic (ieee_proposed.fixed_pkg).
+-- point arithmetic.
 --
 -- This code is mostly based on the sample provided by vapin, but made
 -- synthesisable
 -- http://vhdlguru.blogspot.de/2011/06/non-synthesisable-vhdl-code-for-8-point.html
 
 library ieee;
+library ieee_proposed;
 
 use ieee.std_logic_1164.all;
+use ieee_proposed.fixed_pkg.all;
 use ieee.numeric_std.all;
 
 -- declare package with helper functions for FFT
@@ -33,8 +35,8 @@ package fft_helpers is
 
     constant COMPZERO: complex := (FIXZERO, FIXZERO);
 
-    type val_arr_fft8 is array (0 to 7) of complex;
-    type phas_arr_fft8 is array (0 to 3) of complex;
+    -- array type for complex numbers
+    type complex_arr is array (natural range <>) of complex;
 
     -- Adds two complex numbers
     function add (n1,n2: complex) return complex;
@@ -42,8 +44,8 @@ package fft_helpers is
     function sub (n1,n2: complex) return complex;
     -- Multiplies two complex numbers
     function mult (n1,n2: complex) return complex;
-
-    function to_complex(r,i: std_logic_vector) return complex;
+    -- converts two real numbers into a complex
+    function to_complex(r,i: real) return complex;
 
 end fft_helpers;
 
@@ -105,11 +107,11 @@ package body fft_helpers is
         return res;
     end mult;
 
-    function to_complex(r,i: std_logic_vector) return complex is
+    function to_complex(r,i: real) return complex is
         variable res: complex;
     begin
-        res.r := signed(r);
-        res.i := signed(i);
+        res.r := signed(to_slv(to_sfixed(r, DECLEN-1, -FRACLEN)));
+        res.i := signed(to_slv(to_sfixed(i, DECLEN-1, -FRACLEN)));
         return res;
     end;
 

@@ -12,50 +12,78 @@ use ieee.std_logic_1164.all;
 use work.fft_helpers.all;
 
 entity fft8 is
-    port(x: in  val_arr_fft8;   --input signals in time domain
-         y: out val_arr_fft8); --output signals in frequency domain
+    generic(RSTDEF: std_logic := '0');
+    port(rst:  in  std_logic; -- reset, RSTDEF active
+         clk:  in  std_logic; -- clk, rising edge
+         din:  in  complex;   -- din, input value
+         dout: out complex);  -- dout, output value
 end fft8;
 
 architecture behavioral of fft8 is
+    -- define that this is a N-point FFT
+    constant N: natural := 8;
+
     -- import butterfly component
     component butterfly is
-        port(din1:  in  complex;  -- first complex in val
-             din2:  in  complex;  -- second complex in val
-             w:     in  complex;  -- complex phasor (rotation vector)
-             dout1: out complex;  -- first complex out val
-             dout2: out complex); -- second complex out val
+        generic(RSTDEF: std_logic := '0');
+        port(rst:   in  std_logic; -- reset, RSTDEF active
+             clk:   in  std_logic; -- clock, rising edge
+             mode:  in  std_logic; -- mode, '0' passthrough; '1' butterfly
+             din1:  in  complex;   -- first complex in val
+             din2:  in  complex;   -- second complex in val
+             w:     in  complex;   -- complex phasor, twiddle factor
+             dout1: out complex;   -- first complex out val
+             dout2: out complex);  -- second complex out val
     end component;
 
-    signal g1: val_arr_fft8 := (others => COMPZERO);
-    signal g2: val_arr_fft8 := (others => COMPZERO);
+    -- import delay component
+    component delay is
+        generic(RSTDEF:   std_logic := '0';
+                DELAYLEN: natural   := 8);  -- can hold 2**DELAYLEN data samples
+        port(rst:  in  std_logic; -- reset , RSTDEF active
+             clk:  in  std_logic; -- clk, rising edge
+             din:  in  complex;   -- data in
+             dout: out complex);  -- data out
+    end component;
 
     -- complex phasor W_N = e**(-j*2*pi/N)
     -- W_N**i = cos(2*pi*i/N) - j*sin(2*pi*i/N)
     --
     -- (1.0,0.0), (0.7071,-0.7071), (0.0,-1.0), (-0.7071,-0.7071)
-    constant w: phas_arr_fft8 := (
-        (COMPZERO),
-        (COMPZERO),
-        (COMPZERO),
-        (COMPZERO));
+    type w_arr is array(0 to N-1) of complex;
+    constant w: w_arr := (
+        to_complex(1.0, 0.0),
+        to_complex(0.7071, -0.7071),
+        to_complex(0.0, -1.0),
+        to_complex(-0.7071, -0.7071));
+
+    signal bf2dl: complex_arr(0 to N-1) := (others => COMPZERO);
+
+    signal bfin1: complex_arr(0 to N-1) := (others => COMPZERO);
+    signal bfin2: complex_arr(0 to N-1) := (others => COMPZERO);
 
 begin
-    --first stage of butterfly's.
-    bf11: butterfly port map(x(0),x(4),w(0),g1(0),g1(1));
-    bf12: butterfly port map(x(2),x(6),w(0),g1(2),g1(3));
-    bf13: butterfly port map(x(1),x(5),w(0),g1(4),g1(5));
-    bf14: butterfly port map(x(3),x(7),w(0),g1(6),g1(7));
 
-    --second stage of butterfly's.
-    bf21: butterfly port map(g1(0),g1(2),w(0),g2(0),g2(2));
-    bf22: butterfly port map(g1(1),g1(3),w(2),g2(1),g2(3));
-    bf23: butterfly port map(g1(4),g1(6),w(0),g2(4),g2(6));
-    bf24: butterfly port map(g1(5),g1(7),w(2),g2(5),g2(7));
+    gen1: for i in 0 to N-2 generate
+        del: delay
+        generic map(RSTDEF   => RSTDEF,
+                    DELAYLEN => N-i-1)
+        port map(rst  => rst,
+                 clk  => clk,
+                 din  => bf2dl(i),
+                 dout => bfin1(i));
+     end generate;
 
-    --third stage of butterfly's.
-    bf31: butterfly port map(g2(0),g2(4),w(0),y(0),y(4));
-    bf32: butterfly port map(g2(1),g2(5),w(1),y(1),y(5));
-    bf33: butterfly port map(g2(2),g2(6),w(2),y(2),y(6));
-    bf34: butterfly port map(g2(3),g2(7),w(3),y(3),y(7));
-
+     gen2: for i in 0 to N-1 generate
+         bf: butterfly
+         generic map(RSTDEF => RSTDEF);
+         port(rst   => rst,
+              clk   => clk,
+              mode  => '1',
+              din1  => bfin1(i),
+              din2  => bfin2(i),
+              w     => w(i),
+              dout1 => bfin2(i+1),
+              dout2 => bf2dl(i));
+      end generate;
 end behavioral;

@@ -29,11 +29,10 @@ architecture behavioral of delay is
     signal r_cnt: unsigned(DELAYLEN-1 downto 0) := (others => '0');
 
     -- data array for circular buffer
-    type delay_arr is array((2**DELAYLEN)-1 downto 0) of complex;
-    signal data: delay_arr := (others => COMPZERO);
+    signal data: complex_arr((2**DELAYLEN)-1 downto 0)) := (others => COMPZERO);
 begin
 
-    process(rst, clk)
+    process(rst, clk) is
     begin
         if rst = RSTDEF then
             w_cnt <= (others => '1');
