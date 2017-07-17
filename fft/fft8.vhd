@@ -78,11 +78,10 @@ begin
     bfin2(0) <= din;
     dout     <= bfout1(N-1);
 
-
     gen1: for i in 0 to N-2 generate
         -- generate delay elements
         -- these are feedback connected with butterfly i
-        -- bf output is input for delay; delay output is input for bf
+        -- bf output maps to delay input; delay output maps to bf input
         del: delay
         generic map(RSTDEF   => RSTDEF,
                     DELAYLEN => N-i-1)
@@ -113,8 +112,8 @@ begin
                  dout2 => bfout2(i));
     end generate;
 
-    -- last bf has no delay element for input 1
-    -- delay its output by 1 clock cycle
+    -- last bf has no delay element for bfin1
+    -- delay its output by one clock cycle
     process(rst, clk)
     begin
         if rst = RSTDEF then

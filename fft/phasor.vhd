@@ -22,16 +22,19 @@ entity phasor is
 end phasor;
 
 architecture behavioral of phasor is
+    signal tmp: complex := COMPZERO;
 begin
+
+    dout <= tmp;
 
     process(rst, clk) is
     begin
         if rst = RSTDEF then
-            dout <= COMPZERO;
+            tmp <= COMPZERO;
         elsif rising_edge(clk) then
             -- multiply input with twiddle factor
             -- clock synchronous
-            dout <= mult(din, w);
+            tmp <= mult(din, w);
         end if;
     end process;
 
