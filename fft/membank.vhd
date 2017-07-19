@@ -14,27 +14,27 @@ use work.fft_helpers.all;
 
 entity membank is
     generic(RSTDEF:  std_logic := '0';
-            ADDRLEN: natural   := 4);
-    port(rst:    in  std_logic;                            -- reset, RSTDEF active
-         clk:    in  std_logic;                            -- clock, rising edge
-         swrst:  in  std_logic;                            -- software reset, RSTDEF active
-         en:     in  std_logic;                            -- enable, high active
-         addr1:  in  std_logic_vector(ADDRLEN-1 downto 0); -- address1
-         addr2:  in  std_logic_vector(ADDRLEN-1 downto 0); -- address2
-         en_wrt: in  std_logic;                            -- write enable for bank1, high active
-         din1:   in  complex;                              -- input1 that will be stored
-         din2:   in  complex;                              -- input2 that will be stored
-         dout1:  out complex;                              -- output1 that is read from memory
-         dout2:  out complex);                             -- output2 that is read from memory
+            FFTEXP:  natural   := 4);
+    port(rst:    in  std_logic;                           -- reset, RSTDEF active
+         clk:    in  std_logic;                           -- clock, rising edge
+         swrst:  in  std_logic;                           -- software reset, RSTDEF active
+         en:     in  std_logic;                           -- enable, high active
+         addr1:  in  std_logic_vector(FFTEXP-1 downto 0); -- address1
+         addr2:  in  std_logic_vector(FFTEXP-1 downto 0); -- address2
+         en_wrt: in  std_logic;                           -- write enable for bank1, high active
+         din1:   in  complex;                             -- input1 that will be stored
+         din2:   in  complex;                             -- input2 that will be stored
+         dout1:  out complex;                             -- output1 that is read from memory
+         dout2:  out complex);                            -- output2 that is read from memory
 end membank;
 
 architecture behavioral of membank is
 
     -- memory bank of data
-    signal bank: complex_arr(0 to (2**ADDRLEN)-1) := (others => COMPZERO);
+    signal bank: complex_arr(0 to (2**FFTEXP)-1) := (others => COMPZERO);
 
-    signal addr1_u: unsigned(ADDRLEN-1 downto 0);
-    signal addr2_u: unsigned(ADDRLEN-1 downto 0);
+    signal addr1_u: unsigned(FFTEXP-1 downto 0);
+    signal addr2_u: unsigned(FFTEXP-1 downto 0);
 begin
 
     addr1_u <= unsigned(addr1);

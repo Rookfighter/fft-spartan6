@@ -11,21 +11,20 @@ use ieee.numeric_std.all;
 
 entity addr_gen is
     generic(RSTDEF: std_logic := '0';
-            ADDRLEN: natural  := 4;
-            LVLLEN: natural   := 3);
-    port(rst:     in  std_logic;                             -- reset, RSTDEF active
-         clk:     in  std_logic;                             -- clock, rising edge
-         swrst:   in  std_logic;                             -- software reset, RSTDEF active
-         en:      in  std_logic;                             -- enable, high active
-         lvl:     in  std_logic_vector(LVLLEN-1 downto 0);   -- iteration level of butterflies
-         bfno:    in  std_logic_vector(ADDRLEN-1 downto 0);  -- butterfly number in current level
-         addra1:  out std_logic_vector(ADDRLEN-1 downto 0);  -- address1 for membank A
-         addra2:  out std_logic_vector(ADDRLEN-1 downto 0);  -- address2 for membank A
-         en_wrta: out std_logic;                             -- write enable for membank A, high active
-         addrb1:  out std_logic_vector(ADDRLEN-1 downto 0);  -- address1 for membank B
-         addrb2:  out std_logic_vector(ADDRLEN-1 downto 0);  -- address2 for membank B
-         en_wrtb: out std_logic;                             -- write enable for membank B, high active
-         addrtf:  out std_logic_vector(ADDRLEN-1 downto 0)); -- twiddle factor address
+            FFTEXP: natural   := 4);
+    port(rst:     in  std_logic;                            -- reset, RSTDEF active
+         clk:     in  std_logic;                            -- clock, rising edge
+         swrst:   in  std_logic;                            -- software reset, RSTDEF active
+         en:      in  std_logic;                            -- enable, high active
+         lvl:     in  std_logic_vector(FFTEXP-1 downto 0);  -- iteration level of butterflies
+         bfno:    in  std_logic_vector(FFTEXP-1 downto 0);  -- butterfly number in current level
+         addra1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank A
+         addra2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank A
+         en_wrta: out std_logic;                            -- write enable for membank A, high active
+         addrb1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank B
+         addrb2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank B
+         en_wrtb: out std_logic;                            -- write enable for membank B, high active
+         addrtf:  out std_logic_vector(FFTEXP-1 downto 0)); -- twiddle factor address
 end addr_gen;
 
 architecture behavioral of addr_gen is
@@ -50,8 +49,8 @@ begin
         end;
 
         -- calculates the read address
-        function read_addr(x: std_logic_vector(ADDRLEN-1 downto 0);
-                           y: std_logic_vector(LVLLEN-1 downto 0))
+        function read_addr(x: std_logic_vector(FFTEXP-1 downto 0);
+                           y: std_logic_vector(FFTEXP-1 downto 0))
                            return std_logic_vector is
         begin
             -- rotate left y times
@@ -59,8 +58,8 @@ begin
         end function;
 
         variable tfidx: natural := 0;
-        variable j:     std_logic_vector(ADDRLEN-1 downto 0) := (others => '0');
-        variable j_inc: std_logic_vector(ADDRLEN-1 downto 0) := (others => '0');
+        variable j:     std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+        variable j_inc: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
 
     begin
         if rst = RSTDEF then
@@ -76,9 +75,9 @@ begin
                 en_wrtb <= not en_wrta_t;
 
                 -- calc twiddle factor address
-                tfidx := ADDRLEN-2-to_integer(unsigned(lvl));
+                tfidx := FFTEXP-1-to_integer(unsigned(lvl));
                 addrtf <= (others => '0');
-                addrtf(ADDRLEN-1 downto tfidx) <= bfno(ADDRLEN-1 downto tfidx);
+                addrtf(FFTEXP-1 downto tfidx) <= bfno(FFTEXP-1 downto tfidx);
 
                 -- pre compute j for address generation
                 j     := std_logic_vector(shift_left(unsigned(bfno), 1));
