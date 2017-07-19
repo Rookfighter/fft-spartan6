@@ -33,7 +33,7 @@ begin
 
     -- if lvl is even then en_wrta is active
     -- if it is odd then en_wrtb is active
-    en_wrta_t <= not lvl(0);
+    en_wrta_t <= lvl(0);
 
     process(rst, clk) is
         -- reset this component
@@ -90,7 +90,7 @@ begin
                     -- addr1: current bfno * 2
                     -- addr2: (current bfno * 2) + 1
                     addra1 <= j;
-                    addra1 <= j_inc;
+                    addra2 <= j_inc;
 
                     addrb1 <= read_addr(j, lvl);
                     addrb2 <= read_addr(j_inc, lvl);
@@ -101,7 +101,7 @@ begin
                     -- addr1: current bfno * 2
                     -- addr2: (current bfno * 2) + 1
                     addrb1 <= j;
-                    addrb1 <= j_inc;
+                    addrb2 <= j_inc;
 
                     addra1 <= read_addr(j, lvl);
                     addra2 <= read_addr(j_inc, lvl);
