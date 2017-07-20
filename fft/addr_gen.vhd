@@ -3,6 +3,7 @@
 -- Created on: 18 Jul 2017
 --     Author: Fabian Meyer
 --
+-- Address generation component for pipelined FFT.
 
 library ieee;
 
