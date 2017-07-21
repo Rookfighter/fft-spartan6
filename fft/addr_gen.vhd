@@ -35,8 +35,8 @@ architecture behavioral of addr_gen is
     signal lvl_tmp:    std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
 begin
 
-    -- if lvl is even then en_wrta is active
-    -- if it is odd then en_wrtb is active
+    -- if lvl is even then en_wrtb is active
+    -- if lvl is odd then en_wrta is active
     en_wrta_tmp <= lvl(0);
 
     bfno_tmp <= '0' & bfno;
