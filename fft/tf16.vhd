@@ -36,18 +36,22 @@ architecture behavioral of tf16 is
         to_complex(-0.7071, 0.7071),
         to_complex(-0.9239, 0.3827)
     );
+    
+    signal w_tmp: complex := COMPZERO;
 
 begin
-
+    
+    w <= w_tmp;
+    
     process(rst, clk) is
     begin
         if rst = RSTDEF then
-            w <= COMPZERO;
+            w_tmp <= COMPZERO;
         elsif rising_edge(clk) then
             if swrst = RSTDEF then
-                w <= COMPZERO;
+                w_tmp <= COMPZERO;
             elsif en = '1' then
-                w <= WFACS(to_integer(unsigned(addr)));
+                w_tmp <= WFACS(to_integer(unsigned(addr)));
             end if;
         end if;
     end process;
