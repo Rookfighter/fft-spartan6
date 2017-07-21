@@ -25,7 +25,7 @@ end entity;
 
 architecture behavioral of delay_vec is
     -- vector through which signal is chained
-    type del_dat is array(0 to DELAYLEN-1) of std_logic_vector(DATALEN-1 downto 0);
+    type del_dat is array(DELAYLEN-1 downto 0) of std_logic_vector(DATALEN-1 downto 0);
     constant ZERODAT: std_logic_vector(DATALEN-1 downto 0) := (others => '0');
 
     signal dvec: del_dat := (others => ZERODAT);
