@@ -17,36 +17,43 @@ entity addr_gen is
          clk:     in  std_logic;                            -- clock, rising edge
          swrst:   in  std_logic;                            -- software reset, RSTDEF active
          en:      in  std_logic;                            -- enable, high active
-         lvl:     in  std_logic_vector(FFTEXP-1 downto 0);  -- iteration level of butterflies
-         bfno:    in  std_logic_vector(FFTEXP-1 downto 0);  -- butterfly number in current level
+         lvl:     in  std_logic_vector(FFTEXP-2 downto 0);  -- iteration level of butterflies
+         bfno:    in  std_logic_vector(FFTEXP-2 downto 0);  -- butterfly number in current level
          addra1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank A
          addra2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank A
          en_wrta: out std_logic;                            -- write enable for membank A, high active
          addrb1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank B
          addrb2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank B
          en_wrtb: out std_logic;                            -- write enable for membank B, high active
-         addrtf:  out std_logic_vector(FFTEXP-1 downto 0)); -- twiddle factor address
+         addrtf:  out std_logic_vector(FFTEXP-2 downto 0)); -- twiddle factor address
 end addr_gen;
 
 architecture behavioral of addr_gen is
-    signal en_wrta_t: std_logic := '0';
+    signal en_wrta_tmp:  std_logic := '0';
+    signal addrtf_tmp: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+    signal bfno_tmp:   std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+    signal lvl_tmp:    std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
 begin
 
     -- if lvl is even then en_wrta is active
     -- if it is odd then en_wrtb is active
-    en_wrta_t <= lvl(0);
+    en_wrta_tmp <= lvl(0);
+
+    bfno_tmp <= '0' & bfno;
+    lvl_tmp  <= '0' & lvl;
+    addrtf <= addrtf_tmp(FFTEXP-2 downto 0);
 
     process(rst, clk) is
         -- reset this component
         procedure reset is
         begin
-            addra1  <= (others => '0');
-            addra2  <= (others => '0');
-            en_wrta <= '0';
-            addrb1  <= (others => '0');
-            addrb2  <= (others => '0');
-            en_wrtb <= '0';
-            addrtf  <= (others => '0');
+            addra1     <= (others => '0');
+            addra2     <= (others => '0');
+            en_wrta    <= '0';
+            addrb1     <= (others => '0');
+            addrb2     <= (others => '0');
+            en_wrtb    <= '0';
+            addrtf_tmp <= (others => '0');
         end;
 
         -- calculates the read address
@@ -72,19 +79,19 @@ begin
                 reset;
             elsif en = '1' then
                 -- make sure only one write enable is set at a time
-                en_wrta <= en_wrta_t;
-                en_wrtb <= not en_wrta_t;
+                en_wrta <= en_wrta_tmp;
+                en_wrtb <= not en_wrta_tmp;
 
                 -- calc twiddle factor address
-                tfidx := FFTEXP-1-to_integer(unsigned(lvl));
-                addrtf <= (others => '0');
-                addrtf(FFTEXP-1 downto tfidx) <= bfno(FFTEXP-1 downto tfidx);
+                tfidx := FFTEXP-1-to_integer(unsigned(lvl_tmp));
+                addrtf_tmp <= (others => '0');
+                addrtf_tmp(FFTEXP-1 downto tfidx) <= bfno_tmp(FFTEXP-1 downto tfidx);
 
                 -- pre compute j for address generation
-                j     := std_logic_vector(shift_left(unsigned(bfno), 1));
+                j     := std_logic_vector(shift_left(unsigned(bfno_tmp), 1));
                 j_inc := std_logic_vector(unsigned(j) + 1);
 
-                if en_wrta_t = '1' then
+                if en_wrta_tmp = '1' then
                     -- a is the one to write
 
                     -- target write address is simply in order
@@ -93,8 +100,8 @@ begin
                     addra1 <= j;
                     addra2 <= j_inc;
 
-                    addrb1 <= read_addr(j, lvl);
-                    addrb2 <= read_addr(j_inc, lvl);
+                    addrb1 <= read_addr(j, lvl_tmp);
+                    addrb2 <= read_addr(j_inc, lvl_tmp);
                 else
                     -- b is the one to write
 
@@ -104,8 +111,8 @@ begin
                     addrb1 <= j;
                     addrb2 <= j_inc;
 
-                    addra1 <= read_addr(j, lvl);
-                    addra2 <= read_addr(j_inc, lvl);
+                    addra1 <= read_addr(j, lvl_tmp);
+                    addra2 <= read_addr(j_inc, lvl_tmp);
                 end if;
             end if;
         end if;

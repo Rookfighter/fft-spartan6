@@ -21,15 +21,15 @@ architecture behavioral of addr_gen_tb is
          clk:     in  std_logic;                            -- clock, rising edge
          swrst:   in  std_logic;                            -- software reset, RSTDEF active
          en:      in  std_logic;                            -- enable, high active
-         lvl:     in  std_logic_vector(FFTEXP-1 downto 0);  -- iteration level of butterflies
-         bfno:    in  std_logic_vector(FFTEXP-1 downto 0);  -- butterfly number in current level
+         lvl:     in  std_logic_vector(FFTEXP-2 downto 0);  -- iteration level of butterflies
+         bfno:    in  std_logic_vector(FFTEXP-2 downto 0);  -- butterfly number in current level
          addra1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank A
          addra2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank A
          en_wrta: out std_logic;                            -- write enable for membank A, high active
          addrb1:  out std_logic_vector(FFTEXP-1 downto 0);  -- address1 for membank B
          addrb2:  out std_logic_vector(FFTEXP-1 downto 0);  -- address2 for membank B
          en_wrtb: out std_logic;                            -- write enable for membank B, high active
-         addrtf:  out std_logic_vector(FFTEXP-1 downto 0)); -- twiddle factor address
+         addrtf:  out std_logic_vector(FFTEXP-2 downto 0)); -- twiddle factor address
     end component;
 
     -- Clock period definitions
@@ -44,8 +44,8 @@ architecture behavioral of addr_gen_tb is
     signal clk:     std_logic := '0';
     signal swrst:   std_logic := '0';
     signal en:      std_logic := '0';
-    signal lvl:     std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal bfno:    std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+    signal lvl:     std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
+    signal bfno:    std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
 
     -- Outputs
     signal addra1:  std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
@@ -54,7 +54,7 @@ architecture behavioral of addr_gen_tb is
     signal addrb1:  std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
     signal addrb2:  std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
     signal en_wrtb: std_logic := '0';
-    signal addrtf:  std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+    signal addrtf:  std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
 
 begin
 
@@ -91,15 +91,14 @@ begin
         procedure inc_step is
             variable tmp: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
         begin
-            tmp := std_logic_vector(unsigned(bfno) + 1);
-            bfno <= tmp;
+            tmp := std_logic_vector(unsigned('0' & bfno) + 1);
+            bfno <= tmp(FFTEXP-2 downto 0);
 
             -- check if butterflies had overflow
             -- then we reach next level of FFT
             -- remark: bfno is always one bit too long
             if tmp(FFTEXP-1) = '1' then
                 lvl <= std_logic_vector(unsigned(lvl) + 1);
-                bfno(FFTEXP-1) <= '0';
             end if;
 
             wait for clk_period;
