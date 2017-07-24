@@ -65,6 +65,5 @@
 *.exe
 *.jhd
 *.schlog
-*.wcfg
 
 xilinxsim.ini
