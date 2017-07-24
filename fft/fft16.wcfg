@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/fabian/develop/fft-spartan6/fft/fft16_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="fft16_tb" />
+            <top_module name="fft_helpers" />
+            <top_module name="fixed_float_types" />
+            <top_module name="fixed_pkg" />
+            <top_module name="math_real" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="textio" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="49" />
+   <wave_markers>
+      <marker time="100000000" label="" />
+      <marker time="265000000" label="" />
+      <marker time="355000000" label="" />
+      <marker time="275000000" label="" />
+      <marker time="415000000" label="" />
+      <marker time="515000000" label="" />
+      <marker time="475000000" label="" />
+      <marker time="535000000" label="" />
+      <marker time="625000000" label="" />
+      <marker time="595000000" label="" />
+      <marker time="655000000" label="" />
+      <marker time="715000000" label="" />
+      <marker time="765000000" label="" />
+      <marker time="775000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/fft16_tb/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/swrst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">swrst</obj_property>
+      <obj_property name="ObjectShortName">swrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/en" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/start" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/set" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">set</obj_property>
+      <obj_property name="ObjectShortName">set</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/get" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">get</obj_property>
+      <obj_property name="ObjectShortName">get</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/din" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din</obj_property>
+      <obj_property name="ObjectShortName">din</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/done" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">done</obj_property>
+      <obj_property name="ObjectShortName">done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/dout" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout</obj_property>
+      <obj_property name="ObjectShortName">dout</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/mem_a/bank" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">bank[0:15]</obj_property>
+      <obj_property name="ObjectShortName">bank[0:15]</obj_property>
+      <obj_property name="label">bank A[0:15]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[0]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">bank[0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[1]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">bank[1]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[2]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">bank[2]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[3]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">bank[3]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[4]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">bank[4]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[5]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">bank[5]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[6]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">bank[6]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[7]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">bank[7]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[8]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">bank[8]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[9]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">bank[9]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[10]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">bank[10]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[11]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">bank[11]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[12]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">bank[12]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[13]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">bank[13]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[14]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">bank[14]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_a/bank[15]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">bank[15]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/mem_b/bank" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">bank[0:15]</obj_property>
+      <obj_property name="ObjectShortName">bank[0:15]</obj_property>
+      <obj_property name="label">bank B[0:15]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[0]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">bank[0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[1]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">bank[1]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[2]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">bank[2]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[3]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">bank[3]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[4]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">bank[4]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[5]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">bank[5]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[6]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">bank[6]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[7]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">bank[7]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[8]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">bank[8]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[9]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">bank[9]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[10]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">bank[10]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[11]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">bank[11]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[12]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">bank[12]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[13]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">bank[13]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[14]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">bank[14]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/fft16_tb/uut/mem_b/bank[15]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">bank[15]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/en_agu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_agu</obj_property>
+      <obj_property name="ObjectShortName">en_agu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addra1_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addra1_agu[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addra1_agu[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addra2_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addra2_agu[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addra2_agu[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/en_wrta_agu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_wrta_agu</obj_property>
+      <obj_property name="ObjectShortName">en_wrta_agu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addrb1_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addrb1_agu[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb1_agu[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addrb2_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addrb2_agu[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb2_agu[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/en_wrtb_agu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_wrtb_agu</obj_property>
+      <obj_property name="ObjectShortName">en_wrtb_agu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/lvl_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lvl_agu[2:0]</obj_property>
+      <obj_property name="ObjectShortName">lvl_agu[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/bfno_agu" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bfno_agu[2:0]</obj_property>
+      <obj_property name="ObjectShortName">bfno_agu[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din_waddr1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_waddr1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">din_waddr1[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din_waddr2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_waddr2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">din_waddr2[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout_waddr1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_waddr1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_waddr1[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout_waddr2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_waddr2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_waddr2[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addr1_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr1_mema[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addr1_mema[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addr2_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr2_mema[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addr2_mema[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/en_wrt_mema" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_wrt_mema</obj_property>
+      <obj_property name="ObjectShortName">en_wrt_mema</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din1_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din1_mema</obj_property>
+      <obj_property name="ObjectShortName">din1_mema</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din2_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din2_mema</obj_property>
+      <obj_property name="ObjectShortName">din2_mema</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout1_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout1_mema</obj_property>
+      <obj_property name="ObjectShortName">dout1_mema</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout2_mema" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout2_mema</obj_property>
+      <obj_property name="ObjectShortName">dout2_mema</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addr1_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr1_memb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addr1_memb[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addr2_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr2_memb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addr2_memb[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/en_wrt_memb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_wrt_memb</obj_property>
+      <obj_property name="ObjectShortName">en_wrt_memb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din1_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din1_memb</obj_property>
+      <obj_property name="ObjectShortName">din1_memb</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din2_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din2_memb</obj_property>
+      <obj_property name="ObjectShortName">din2_memb</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout1_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout1_memb</obj_property>
+      <obj_property name="ObjectShortName">dout1_memb</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout2_memb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout2_memb</obj_property>
+      <obj_property name="ObjectShortName">dout2_memb</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/addr_tf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr_tf[2:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_tf[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/w_tf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">w_tf</obj_property>
+      <obj_property name="ObjectShortName">w_tf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din1_bf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din1_bf</obj_property>
+      <obj_property name="ObjectShortName">din1_bf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din2_bf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din2_bf</obj_property>
+      <obj_property name="ObjectShortName">din2_bf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout1_bf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout1_bf</obj_property>
+      <obj_property name="ObjectShortName">dout1_bf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout2_bf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout2_bf</obj_property>
+      <obj_property name="ObjectShortName">dout2_bf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/w_bf" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">w_bf</obj_property>
+      <obj_property name="ObjectShortName">w_bf</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/din_enagu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">din_enagu</obj_property>
+      <obj_property name="ObjectShortName">din_enagu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fft16_tb/uut/dout_enagu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_enagu</obj_property>
+      <obj_property name="ObjectShortName">dout_enagu</obj_property>
+   </wvobject>
+</wave_config>
