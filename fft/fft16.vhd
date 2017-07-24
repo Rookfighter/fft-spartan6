@@ -120,28 +120,41 @@ architecture behavioral of fft16 is
     -- delay write address by 3 cycles
     constant DELWADDR: natural := 3;
     constant DELENAGU: natural := 3;
+    constant DELENDFFT: natural := 1;
+
+    -- INTERNALS
+    -- =========
 
     -- define states for FSM of FFT
-    type TState is (SIDLE, SSET, SGET, SRUN, SENDLVL);
+    type TState is (SIDLE, SSET, SGET, SRUN);
     signal state: TState := SIDLE;
 
-    -- signal to control enable of agu
-    signal en_agu_con: std_logic := '0';
+    -- intermediate signal for dout; used for muxing
+    signal dout_tmp: complex := COMPZERO;
 
-    -- address signals from agu to membank A
-    signal addra1_agu: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal addra2_agu: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal en_wrta_agu: std_logic := '0';
-    -- address signals from agu to membank B
-    signal addrb1_agu: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal addrb2_agu: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal en_wrtb_agu: std_logic := '0';
+    -- signal to control enable of agu; used for muxing
+    signal en_agu_con: std_logic := '0';
+    -- signal to control software reset of agu; used for muxing
+    signal swrst_agu_con: std_logic := '0';
+
+    -- address counter for get and set
+    signal addr_cnt: unsigned(FFTEXP-1 downto 0) := (others => '0');
+    -- bit reversed address; async set from addr_cnt
+    signal addr_rev: std_logic_vector(FFTEXP-1 downto 0);
+
+    -- ======
+    -- INPUTS
+    -- ======
+
+    -- data in port of delay for end fft signal
+    signal din_end_fft: std_logic := '0';
+
     -- enable signal for agu
     signal en_agu:   std_logic := '0';
+    -- current FFT stage / level for agu
     signal lvl_agu:  std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
+    -- current butterfly number within current stage for agu
     signal bfno_agu: std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
-    -- address signal for twiddle factor
-    signal addrtf_agu: std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
 
     -- address signals for membank A
     signal addr1_mema: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
@@ -151,10 +164,6 @@ architecture behavioral of fft16 is
     -- data in ports for membank A
     signal din1_mema: complex := COMPZERO;
     signal din2_mema: complex := COMPZERO;
-    --data out ports for membank A
-    signal dout1_mema: complex := COMPZERO;
-    signal dout2_mema: complex := COMPZERO;
-
     -- address signals for membank B
     signal addr1_memb: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
     signal addr2_memb: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
@@ -163,46 +172,75 @@ architecture behavioral of fft16 is
     -- data in ports for membank B
     signal din1_memb: complex := COMPZERO;
     signal din2_memb: complex := COMPZERO;
-    --data out ports for membank A
-    signal dout1_memb: complex := COMPZERO;
-    signal dout2_memb: complex := COMPZERO;
 
     -- data in ports for butterfly
     signal din1_bf: complex := COMPZERO;
     signal din2_bf: complex := COMPZERO;
-    -- data out ports for butterfly
-    signal dout1_bf: complex := COMPZERO;
-    signal dout2_bf: complex := COMPZERO;
     -- twiddle factor for butterfly
     signal w_bf: complex := COMPZERO;
 
     -- address signal for twiddle factor unit
     signal addr_tf: std_logic_vector(FFTEXP-2 downto 0) := (others => '0');
-    -- data out port for twiddle factor unit
-    signal w_tf: complex := COMPZERO;
 
     -- data in ports for write address delay
     signal din_waddr1: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
     signal din_waddr2: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    -- data out ports for write address delay
-    signal dout_waddr1: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
-    signal dout_waddr2: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
 
     -- data in port for enable agu delay
     signal din_enagu: std_logic := '0';
-    -- data out port for enable agu delay
-    signal dout_enagu: std_logic := '0';
 
-    signal addr_cnt: unsigned(FFTEXP-1 downto 0) := (others => '0');
-    signal addr_rev: std_logic_vector(FFTEXP-1 downto 0) := (others => '0');
+    -- =======
+    -- OUTPUTS
+    -- =======
+
+    -- data out port of delay for end fft signal
+    signal dout_end_fft: std_logic;
+
+    -- address signals from agu for membank A
+    signal addra1_agu: std_logic_vector(FFTEXP-1 downto 0);
+    signal addra2_agu: std_logic_vector(FFTEXP-1 downto 0);
+    signal en_wrta_agu: std_logic;
+    -- address signals from agu for membank B
+    signal addrb1_agu: std_logic_vector(FFTEXP-1 downto 0);
+    signal addrb2_agu: std_logic_vector(FFTEXP-1 downto 0);
+    signal en_wrtb_agu: std_logic;
+    -- address signal for twiddle factor
+    signal addrtf_agu: std_logic_vector(FFTEXP-2 downto 0);
+    -- software reset signal for agu
+    signal swrst_agu: std_logic;
+
+    --data out ports for membank A
+    signal dout1_mema: complex;
+    signal dout2_mema: complex;
+    --data out ports for membank B
+    signal dout1_memb: complex;
+    signal dout2_memb: complex;
+
+    -- data out ports for butterfly
+    signal dout1_bf: complex;
+    signal dout2_bf: complex;
+
+    -- data out port for twiddle factor unit
+    signal w_tf: complex;
+
+    -- data out ports for write address delay
+    signal dout_waddr1: std_logic_vector(FFTEXP-1 downto 0);
+    signal dout_waddr2: std_logic_vector(FFTEXP-1 downto 0);
+
+    -- data out port for enable agu delay
+    signal dout_enagu: std_logic;
 
 begin
+
+    dout <= dout_tmp;
 
     -- done is set if we are in IDLE state
     done <= '1' when state = SIDLE else '0';
 
     -- multiplex enable signal for agu
     en_agu <= '0' when en = '0' else en_agu_con;
+    -- multiplex swrst signal for agu
+    swrst_agu <= swrst when swrst = RSTDEF else swrst_agu_con;
 
     -- calc bit reversed address
     gen_rev: for i in 0 to FFTEXP-1 generate
@@ -219,6 +257,7 @@ begin
             lvl_agu    <= (others => '0');
             bfno_agu   <= (others => '0');
             en_agu_con <= '0';
+            swrst_agu_con <= not RSTDEF;
 
             -- reset membank A
             addr1_mema <= (others => '0');
@@ -251,7 +290,11 @@ begin
 
             --reset address counter
             addr_cnt <= (others => '0');
+
+            -- reset delay for end_fft
+            din_end_fft <= '0';
         end;
+
     begin
         if rst = RSTDEF then
             reset;
@@ -284,12 +327,12 @@ begin
                             -- "get" signal received
                             state <= SGET;
 
-                            -- read values from membank B in normal order
+                            -- read values from membank A in normal order
                             -- addr_cnt defines address to be read
                             -- membanks should always be in read mode when
                             -- FSM is idle
                             addr_cnt <= addr_cnt + 1;
-                            addr1_memb <= std_logic_vector(addr_cnt);
+                            addr1_mema <= std_logic_vector(addr_cnt);
                         elsif start = '1' then
                             -- "start" signal received
                             state <= SRUN;
@@ -322,24 +365,25 @@ begin
                         -- increment address count
                         -- this is the address that we read from
                         addr_cnt <= addr_cnt + 1;
-                        addr1_memb <= std_logic_vector(addr_cnt);
-                        dout <= dout1_memb;
+                        addr1_mema <= std_logic_vector(addr_cnt);
+                        dout_tmp <= dout1_mema;
 
                         -- if counter had overflow go back to idle state
                         -- and reset all used resources
                         if addr_cnt = "0000" then
-                            -- reset addr1 of membank B
-                            addr1_memb <= (others => '0');
+                            -- reset addr1 of membank A
+                            addr1_mema <= (others => '0');
                             -- set data out to zero
-                            dout <= COMPZERO;
+                            dout_tmp <= COMPZERO;
                             -- reset addr_cnt
                             addr_cnt <= (others => '0');
                             -- go back to idle mode
                             state <= SIDLE;
                         end if;
                     when SRUN =>
-                        -- execute pipeline
                         -- ================
+                        -- BEGIN execute pipeline
+
                         -- apply write enables from agu
                         en_wrt_mema <= en_wrta_agu;
                         en_wrt_memb <= en_wrtb_agu;
@@ -392,36 +436,52 @@ begin
                             din2_memb <= dout2_bf;
                         end if;
 
-                        -- increment butterfly every cycle
-                        bfno_agu <= std_logic_vector(unsigned(bfno_agu) + 1);
+                        -- END execute pipeline
+                        -- ====================
+
+                        -- din_enagu only stays high for one cycle
+                        din_enagu <= '0';
+                        -- din_end_fft only stays high for one cycle
+                        din_end_fft <= '0';
+
+                        -- if agu is still enabled keep incrementing butterflies
+                        if en_agu_con = '1' then
+                            bfno_agu <= std_logic_vector(unsigned(bfno_agu) + 1);
+                        end if;
 
                         -- if we have reached last butterfly wait for pipeline
                         -- to finish
                         if bfno_agu = "111" then
                             en_agu_con <= '0';
                             din_enagu <= '1';
-                            state <= SENDLVL;
                         end if;
-                    when SENDLVL =>
-                        din_enagu <= '0';
 
-                        -- wait unit enable signal reaches us
+                        -- this will only be the case if we have reached last butterfly
+                        -- and agu was disabled
                         if dout_enagu = '1' then
                             -- reset butterfly number
                             bfno_agu <= (others => '0');
 
                             if lvl_agu = "011" then
-                                -- final level was reached: we are done
-                                -- reset all internal states
-                                -- membanks not included!
-                                state <= SIDLE;
-                                reset;
+                                -- set end_fft
+                                din_end_fft <= '1';
+                                swrst_agu_con <= RSTDEF;
                             else
                                 -- go to next level
                                 -- enable agu again
                                 lvl_agu <= std_logic_vector(unsigned(lvl_agu) + 1);
                                 en_agu_con <= '1';
                             end if;
+                        end if;
+
+                        -- this will only be the case if we have reached last butterfly
+                        -- and last level
+                        if dout_end_fft = '1' then
+                            -- final level was reached: we are done
+                            -- reset all internal states
+                            -- membanks not included!
+                            state <= SIDLE;
+                            reset;
                         end if;
                 end case;
             end if;
@@ -434,7 +494,7 @@ begin
                     FFTEXP => FFTEXP)
         port map(rst     => rst,
                  clk     => clk,
-                 swrst   => swrst,
+                 swrst   => swrst_agu,
                  en      => en_agu,
                  lvl     => lvl_agu,
                  bfno    => bfno_agu,
@@ -536,4 +596,14 @@ begin
                  en    => en,
                  din   => din_enagu,
                  dout  => dout_enagu);
+
+     del_end_fft: delay_bit
+         generic map(RSTDEF   => RSTDEF,
+                     DELAYLEN => DELENDFFT)
+         port map(rst   => rst,
+                  clk   => clk,
+                  swrst => swrst,
+                  en    => en,
+                  din   => din_end_fft,
+                  dout  => dout_end_fft);
 end;

@@ -32,6 +32,7 @@
       <marker time="715000000" label="" />
       <marker time="765000000" label="" />
       <marker time="775000000" label="" />
+      <marker time="785000000" label="" />
    </wave_markers>
    <wvobject fp_name="/fft16_tb/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>
