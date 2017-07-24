@@ -98,7 +98,7 @@ architecture behavioral of whole_design is
     signal rx_data_i2c: std_logic_vector(7 downto 0);
     signal rx_recv_i2c: std_logic;
     signal tx_sent_i2c: std_logic;
-    signal i2c_busy_i2c: std_logic;
+    signal busy_i2c: std_logic;
 
     signal done_fft: std_logic;
     signal dout_fft: complex;
@@ -199,7 +199,7 @@ begin
                 when SSEND2 =>
                     en_fft <= '0';
 
-                    if i2c_busy_i2c = '0' then
+                    if busy_i2c = '0' then
                         -- increment byte counter
                         byte_cnt <= byte_cnt + 1;
                         byte_cnt_shift := shift_left(byte_cnt, 3);
@@ -238,7 +238,7 @@ begin
                  tx_sent => tx_sent_i2c,
                  rx_data => rx_data_i2c,
                  rx_recv => rx_recv_i2c,
-                 busy    => i2c_busy_i2c,
+                 busy    => busy_i2c,
                  sda     => sda,
                  scl     => scl);
 
