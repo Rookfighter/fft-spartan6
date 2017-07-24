@@ -1,6 +1,6 @@
 -- tf16.vhd
 --
--- Created on: 20 Jul 2017
+-- Created on: 17 Jul 2017
 --     Author: Fabian Meyer
 --
 -- Clock synchronous twiddle factor provider for 16-point FFT.
@@ -36,13 +36,13 @@ architecture behavioral of tf16 is
         to_complex(-0.7071, 0.7071),
         to_complex(-0.9239, 0.3827)
     );
-    
+
     signal w_tmp: complex := COMPZERO;
 
 begin
-    
+
     w <= w_tmp;
-    
+
     process(rst, clk) is
     begin
         if rst = RSTDEF then

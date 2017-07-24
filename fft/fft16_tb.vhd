@@ -1,6 +1,6 @@
 -- fft16_tb.vhd
 --
--- Created on: 19 Jul 2017
+-- Created on: 15 Jul 2017
 --     Author: Fabian Meyer
 --
 -- This testbench simulates a 16-Point FFT for manual testing. Pipelining

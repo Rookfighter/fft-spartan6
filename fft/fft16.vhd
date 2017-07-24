@@ -1,6 +1,6 @@
 -- fft16.vhd
 --
--- Created on: 20 Jul 2017
+-- Created on: 15 Jul 2017
 --     Author: Fabian Meyer
 --
 -- Integration component for 16-point FFT.

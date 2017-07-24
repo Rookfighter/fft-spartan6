@@ -1,6 +1,6 @@
 -- membank.vhd
 --
--- Created on: 18 Jul 2017
+-- Created on: 15 Jul 2017
 --     Author: Fabian Meyer
 --
 -- 2 port memory bank component.
