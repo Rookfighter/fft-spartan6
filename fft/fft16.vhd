@@ -138,7 +138,7 @@ architecture behavioral of fft16 is
     signal swrst_agu_con: std_logic := '0';
 
     -- address counter for get and set
-    signal addr_cnt: unsigned(FFTEXP-1 downto 0) := (others => '0');
+    signal addr_cnt: unsigned(FFTEXP downto 0) := (others => '0');
     -- bit reversed address; async set from addr_cnt
     signal addr_rev: std_logic_vector(FFTEXP-1 downto 0);
 
@@ -332,7 +332,7 @@ begin
                             -- membanks should always be in read mode when
                             -- FSM is idle
                             addr_cnt <= addr_cnt + 1;
-                            addr1_mema <= std_logic_vector(addr_cnt);
+                            addr1_mema <= std_logic_vector(addr_cnt(FFTEXP-1 downto 0));
                         elsif start = '1' then
                             -- "start" signal received
                             state <= SRUN;
@@ -348,7 +348,7 @@ begin
 
                         -- if counter had overflow go back to idle state
                         -- and reset all used resources
-                        if addr_cnt = "0000" then
+                        if addr_cnt(FFTEXP) = '1' then
                             -- reset membank addresses and data in ports
                             addr1_mema <= (others => '0');
                             din1_mema <= COMPZERO;
@@ -365,16 +365,14 @@ begin
                         -- increment address count
                         -- this is the address that we read from
                         addr_cnt <= addr_cnt + 1;
-                        addr1_mema <= std_logic_vector(addr_cnt);
+                        addr1_mema <= std_logic_vector(addr_cnt(FFTEXP-1 downto 0));
                         dout_tmp <= dout1_mema;
 
                         -- if counter had overflow go back to idle state
                         -- and reset all used resources
-                        if addr_cnt = "0000" then
+                        if addr_cnt(FFTEXP) = '1' and addr_cnt(0) = '1' then
                             -- reset addr1 of membank A
                             addr1_mema <= (others => '0');
-                            -- set data out to zero
-                            dout_tmp <= COMPZERO;
                             -- reset addr_cnt
                             addr_cnt <= (others => '0');
                             -- go back to idle mode
