@@ -41,7 +41,7 @@ begin
             if swrst = RSTDEF then
                 dvec <= (others => ZERODAT);
             elsif en = '1' then
-                dvec <= dvec(DELAYLEN-1 downto 1) & din;
+                dvec <= dvec(DELAYLEN-2 downto 0) & din;
             end if;
         end if;
     end process;
