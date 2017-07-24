@@ -135,7 +135,7 @@ architecture behavioral of fft16 is
     -- signal to control enable of agu; used for muxing
     signal en_agu_con: std_logic := '0';
     -- signal to control software reset of agu; used for muxing
-    signal swrst_agu_con: std_logic := '0';
+    signal swrst_agu_con: std_logic := not RSTDEF;
 
     -- address counter for get and set
     signal addr_cnt: unsigned(FFTEXP downto 0) := (others => '0');
@@ -463,7 +463,7 @@ begin
                             if lvl_agu = "011" then
                                 -- set end_fft
                                 din_end_fft <= '1';
-                                swrst_agu_con <= RSTDEF;
+                                --swrst_agu_con <= RSTDEF;
                             else
                                 -- go to next level
                                 -- enable agu again
