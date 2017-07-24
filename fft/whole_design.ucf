@@ -1,0 +1,7 @@
+
+# PlanAhead Generated physical constraints
+
+NET "clk" LOC = M21;
+NET "rst" LOC = AE24;
+NET "scl" LOC = V17;
+NET "sda" LOC = U17;
