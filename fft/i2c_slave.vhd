@@ -23,13 +23,15 @@ end entity;
 
 architecture behavioral of i2c_slave is
 
-    component delay
+    component delay_bit
     generic(RSTDEF: std_logic := '0';
             DELAYLEN: natural := 8);
-    port(rst:  in  std_logic;   -- reset, RSTDEF active
-         clk:  in  std_logic;   -- clock, rising edge
-         din:  in  std_logic;   -- data in
-         dout: out std_logic);  -- data out
+    port(rst:   in  std_logic;   -- reset, RSTDEF active
+         clk:   in  std_logic;   -- clock, rising edge
+         swrst: in std_logic;
+         en:    in std_logic;
+         din:   in  std_logic;   -- data in
+         dout:  out std_logic);  -- data out
     end component;
 
     -- states for FSM
@@ -70,13 +72,15 @@ begin
     busy <= '0' when state = SIDLE else '1';
 
     -- delay sda signal by 24 cylces (= 1us)
-    delay1: delay
+    delay1: delay_bit
         generic map(RSTDEF => RSTDEF,
                     DELAYLEN => 24)
-        port map(rst => rst,
-                 clk => clk,
-                 din => sda,
-                 dout => sda_del);
+        port map(rst   => rst,
+                 clk   => clk,
+                 swrst => not RSTDEF,
+                 en    => '1',
+                 din   => sda,
+                 dout  => sda_del);
 
     process(clk, rst)
     begin
