@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -129,7 +130,7 @@ int main(int argc, char * argv[]) {
     uint8_t data[B2S];
     int vals[16];
     int ret;
-    int i, j;
+    int i;
 
     printf("\n");
     printf("I2C fft application\n");
@@ -157,7 +158,7 @@ int main(int argc, char * argv[]) {
     }
 
     ret = i2c_read_write(SLV_ADDR,
-        &data, B2S,
+        data, B2S,
         NULL, 0);
 
     if(ret)
@@ -169,7 +170,7 @@ int main(int argc, char * argv[]) {
 
     ret = i2c_read_write(SLV_ADDR,
         NULL, 0,
-        &data, B2S);
+        data, B2S);
 
     for(i = 0; i < 15; ++i) {
         int idx = i*3;
