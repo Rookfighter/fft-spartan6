@@ -19,42 +19,19 @@
    <WVObjectSize size="25" />
    <wave_markers>
       <marker time="100000000" label="" />
-      <marker time="595000000" label="" />
-      <marker time="4855000000" label="" />
-      <marker time="4865000000" label="" />
-      <marker time="7115000000" label="" />
-      <marker time="9375000000" label="" />
-      <marker time="9385000000" label="" />
-      <marker time="9395000000" label="" />
-      <marker time="11635000000" label="" />
-      <marker time="13895000000" label="" />
-      <marker time="16155000000" label="" />
-      <marker time="18415000000" label="" />
-      <marker time="20675000000" label="" />
-      <marker time="22935000000" label="" />
-      <marker time="22945000000" label="" />
-      <marker time="25195000000" label="" />
-      <marker time="27455000000" label="" />
-      <marker time="29715000000" label="" />
-      <marker time="29725000000" label="" />
-      <marker time="31975000000" label="" />
-      <marker time="34235000000" label="" />
-      <marker time="36495000000" label="" />
-      <marker time="111085000000" label="" />
-      <marker time="111125000000" label="" />
-      <marker time="111635000000" label="" />
-      <marker time="115255000000" label="" />
-      <marker time="115265000000" label="" />
-      <marker time="115675000000" label="" />
-      <marker time="116085000000" label="" />
-      <marker time="116495000000" label="" />
-      <marker time="116905000000" label="" />
-      <marker time="117315000000" label="" />
-      <marker time="117725000000" label="" />
-      <marker time="118135000000" label="" />
-      <marker time="118545000000" label="" />
-      <marker time="118955000000" label="" />
-      <marker time="118540000000" label="" />
+      <marker time="605000000" label="" />
+      <marker time="5035000000" label="" />
+      <marker time="9735000000" label="" />
+      <marker time="16785000000" label="" />
+      <marker time="23835000000" label="" />
+      <marker time="115485000000" label="" />
+      <marker time="115535000000" label="" />
+      <marker time="116045000000" label="" />
+      <marker time="119795000000" label="" />
+      <marker time="121055000000" label="" />
+      <marker time="122315000000" label="" />
+      <marker time="123575000000" label="" />
+      <marker time="138715000000" label="" />
    </wave_markers>
    <wvobject fp_name="/whole_design_tb/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>

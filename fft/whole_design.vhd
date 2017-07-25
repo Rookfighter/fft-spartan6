@@ -56,7 +56,7 @@ architecture behavioral of whole_design is
     -- =========
 
     -- define states for FSM of whole design
-    type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2);
+    type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2, SSEND3);
     signal state: TState := SIDLE;
 
     -- INPUTS
@@ -220,12 +220,17 @@ begin
                             -- inc sample counter
                             sample_cnt <= sample_cnt + 1;
 
-                            -- if sample counter is full we just sent last result
+                            -- if sample counter overflows we just sent last result
                             if sample_cnt = "1111" then
                                 sample_cnt <= (others => '0');
-                                state <= SIDLE;
+                                state <= SSEND3;
                             end if;
                         end if;
+                    end if;
+                when SSEND3 =>
+                    -- wait until also last byte was sent
+                    if tx_sent_i2c = '1' then
+                        state <= SIDLE;
                     end if;
             end case;
         end if;

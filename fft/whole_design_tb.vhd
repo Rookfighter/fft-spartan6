@@ -85,6 +85,7 @@ begin
         procedure send_bit(tosend: std_logic) is
         begin
             scl <= '0';
+            wait for clk_period;
             sda <= tosend;
             -- wait for delay element to take over new value
             wait for 24*clk_period;
@@ -204,6 +205,26 @@ begin
 
         wait_ack;
 
+        -- two extra bytes for initial empty ones (which initiate communication)
+        recv_bit; -- data bit 1
+        recv_bit; -- data bit 2
+        recv_bit; -- data bit 3
+        recv_bit; -- data bit 4
+        recv_bit; -- data bit 5
+        recv_bit; -- data bit 6
+        recv_bit; -- data bit 7
+        recv_bit; -- data bit 8
+        send_ack;
+
+        recv_bit; -- data bit 1
+        recv_bit; -- data bit 2
+        recv_bit; -- data bit 3
+        recv_bit; -- data bit 4
+        recv_bit; -- data bit 5
+        recv_bit; -- data bit 6
+        recv_bit; -- data bit 7
+        recv_bit; -- data bit 8
+        send_ack;
         -- receive results
         for i in 0 to 15 loop
             for j in 0 to BYTES-1 loop
