@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/fabian/develop/fft-spartan6/fft/whole_design_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="fft_helpers" />
+            <top_module name="fixed_float_types" />
+            <top_module name="fixed_pkg" />
+            <top_module name="math_real" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="textio" />
+            <top_module name="whole_design_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="25" />
+   <wave_markers>
+      <marker time="100000000" label="" />
+      <marker time="595000000" label="" />
+      <marker time="4855000000" label="" />
+      <marker time="4865000000" label="" />
+      <marker time="7115000000" label="" />
+      <marker time="9375000000" label="" />
+      <marker time="9385000000" label="" />
+      <marker time="9395000000" label="" />
+      <marker time="11635000000" label="" />
+      <marker time="13895000000" label="" />
+      <marker time="16155000000" label="" />
+      <marker time="18415000000" label="" />
+      <marker time="20675000000" label="" />
+      <marker time="22935000000" label="" />
+      <marker time="22945000000" label="" />
+      <marker time="25195000000" label="" />
+      <marker time="27455000000" label="" />
+      <marker time="29715000000" label="" />
+      <marker time="29725000000" label="" />
+      <marker time="31975000000" label="" />
+      <marker time="34235000000" label="" />
+      <marker time="36495000000" label="" />
+      <marker time="111085000000" label="" />
+      <marker time="111125000000" label="" />
+      <marker time="111635000000" label="" />
+      <marker time="115255000000" label="" />
+      <marker time="115265000000" label="" />
+      <marker time="115675000000" label="" />
+      <marker time="116085000000" label="" />
+      <marker time="116495000000" label="" />
+      <marker time="116905000000" label="" />
+      <marker time="117315000000" label="" />
+      <marker time="117725000000" label="" />
+      <marker time="118135000000" label="" />
+      <marker time="118545000000" label="" />
+      <marker time="118955000000" label="" />
+      <marker time="118540000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/whole_design_tb/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/sda" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">sda</obj_property>
+      <obj_property name="ObjectShortName">sda</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/scl" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">scl</obj_property>
+      <obj_property name="ObjectShortName">scl</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/clk_period" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_period</obj_property>
+      <obj_property name="ObjectShortName">clk_period</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/bytes" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">bytes</obj_property>
+      <obj_property name="ObjectShortName">bytes</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/samples" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">samples</obj_property>
+      <obj_property name="ObjectShortName">samples</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/byte_cnt" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">byte_cnt[1:0]</obj_property>
+      <obj_property name="ObjectShortName">byte_cnt[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/sample_cnt" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_cnt[3:0]</obj_property>
+      <obj_property name="ObjectShortName">sample_cnt[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/rx_recv_i2c" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_recv_i2c</obj_property>
+      <obj_property name="ObjectShortName">rx_recv_i2c</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/rx_data_i2c" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data_i2c[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_data_i2c[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/tx_sent_i2c" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">tx_sent_i2c</obj_property>
+      <obj_property name="ObjectShortName">tx_sent_i2c</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/tx_data_i2c" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">tx_data_i2c[7:0]</obj_property>
+      <obj_property name="ObjectShortName">tx_data_i2c[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/busy_i2c" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">busy_i2c</obj_property>
+      <obj_property name="ObjectShortName">busy_i2c</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/en_fft" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_fft</obj_property>
+      <obj_property name="ObjectShortName">en_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/start_fft" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">start_fft</obj_property>
+      <obj_property name="ObjectShortName">start_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/set_fft" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">set_fft</obj_property>
+      <obj_property name="ObjectShortName">set_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/get_fft" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">get_fft</obj_property>
+      <obj_property name="ObjectShortName">get_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/din_fft" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_fft</obj_property>
+      <obj_property name="ObjectShortName">din_fft</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/done_fft" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">done_fft</obj_property>
+      <obj_property name="ObjectShortName">done_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/dout_fft" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_fft</obj_property>
+      <obj_property name="ObjectShortName">dout_fft</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/fft/state" type="other" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+      <obj_property name="label">state_fft</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">bank[0:15]</obj_property>
+      <obj_property name="ObjectShortName">bank[0:15]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">bank_A[0:15]</obj_property>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[0]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">bank[0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[1]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">bank[1]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[2]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">bank[2]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[3]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">bank[3]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[4]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">bank[4]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[5]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">bank[5]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[6]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">bank[6]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[7]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">bank[7]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[8]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">bank[8]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[9]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">bank[9]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[10]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">bank[10]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[11]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">bank[11]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[12]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">bank[12]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[13]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">bank[13]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[14]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">bank[14]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/whole_design_tb/uut/fft/mem_a/bank[15]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">bank[15]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/i2c/state" type="other" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+      <obj_property name="label">state_i2c</obj_property>
+   </wvobject>
+</wave_config>

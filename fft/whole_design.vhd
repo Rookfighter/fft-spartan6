@@ -52,26 +52,11 @@ architecture behavioral of whole_design is
          dout:    out complex);  -- data out for reading results
     end component;
 
-    -- import delay element for bits
-    component delay_bit
-    generic(RSTDEF:   std_logic := '0';
-            DELAYLEN: natural := 8);
-    port(rst:   in  std_logic;   -- reset, RSTDEF active
-         clk:   in  std_logic;   -- clock, rising edge
-         swrst: in  std_logic;   -- software reset, RSTDEF active
-         en:    in  std_logic;   -- enable, high active
-         din:   in  std_logic;   -- data in
-         dout:  out std_logic);  -- data out
-    end component;
-
-    constant FFTEXP: natural := 16;
-    constant DELSTARTFFT: natural := 2;
-
-    -- INTERNALS
+    constant FFTEXP: natural := 4;
     -- =========
 
     -- define states for FSM of whole design
-    type TState is (SIDLE, SRECV, SRUN, SSEND1, SSEND2);
+    type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2);
     signal state: TState := SIDLE;
 
     -- INPUTS
@@ -89,8 +74,6 @@ architecture behavioral of whole_design is
     signal get_fft:    std_logic := '0';
     signal din_fft:    complex   := COMPZERO;
 
-    signal din_start_fft: std_logic := '0';
-
     -- OUTPUTS
     -- =======
 
@@ -103,11 +86,7 @@ architecture behavioral of whole_design is
     signal done_fft: std_logic;
     signal dout_fft: complex;
 
-    signal dout_start_fft: std_logic;
-
 begin
-
-    start_fft <= dout_start_fft;
 
     process(rst, clk) is
         procedure reset is
@@ -126,19 +105,19 @@ begin
             set_fft <= '0';
             get_fft <= '0';
             din_fft <= (COMPZERO);
+            start_fft <= '0';
 
-            -- reset delay start
-            din_start_fft <= '0';
         end procedure;
 
-        variable byte_cnt_shift: unsigned(1 downto 0) := (others => '0');
+        variable byte_cnt_shift: unsigned(4 downto 0) := (others => '0');
+        variable byte_start: natural := 0;
+        variable byte_end: natural := 0;
     begin
         if rst = RSTDEF then
             reset;
         elsif rising_edge(clk) then
-            -- always only stay high for one cylce
-            din_start_fft <= '0';
             -- only stay high for one cycle
+            start_fft <= '0';
             get_fft <= '0';
             set_fft <= '0';
 
@@ -148,10 +127,23 @@ begin
                     if rx_recv_i2c = '1' then
                         state <= SRECV;
 
+                        en_fft <= '0';
                         byte_cnt <= byte_cnt + 1;
-                        byte_cnt_shift := shift_left(byte_cnt, 3);
-                        din_fft.r(FIXLEN-to_integer(byte_cnt_shift)-1 downto FIXLEN-to_integer(byte_cnt_shift)-8)
-                            <= signed(rx_data_i2c);
+                        -- multiply byte count by 8
+                        byte_cnt_shift := shift_left(resize(byte_cnt, 5), 3);
+                        byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
+                        byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
+                        -- write rx of I2C to din of FFT
+                        din_fft.r( byte_start downto byte_end) <= signed(rx_data_i2c);
+                    end if;
+
+                    -- we have sent something
+                    -- first byte is without any information
+                    -- it just indicates that someone wants to read
+                    if tx_sent_i2c = '1' then
+                        -- send get signal
+                        get_fft <= '1';
+                        state <= SSEND1;
                     end if;
                 when SRECV =>
                     -- disable fft until we get next number
@@ -161,9 +153,12 @@ begin
                         -- received another byte
 
                         byte_cnt <= byte_cnt + 1;
-                        byte_cnt_shift := shift_left(byte_cnt, 3);
-                        din_fft.r(FIXLEN-to_integer(byte_cnt_shift)-1 downto FIXLEN-to_integer(byte_cnt_shift)-8)
-                            <= signed(rx_data_i2c);
+                        -- multiply byte count by 8
+                        byte_cnt_shift := shift_left(resize(byte_cnt, 5), 3);
+                        byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
+                        byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
+                        -- write rx of I2C to din of FFT
+                        din_fft.r(byte_start downto byte_end) <= signed(rx_data_i2c);
 
                         if byte_cnt = "10" then
                             -- we have received 3 bytes
@@ -178,35 +173,42 @@ begin
                             if sample_cnt = "1111" then
                                 -- we have received all samples
                                 -- go into computation mode
-                                state <= SRUN;
+                                state <= SRUN1;
                                 -- reset sample counter
                                 sample_cnt <= (others => '0');
-                                -- trigger start of FFT
-                                din_start_fft <= '1';
                             end if;
                         end if;
                     end if;
-                when SRUN =>
-                    -- if fft is done and start signal is not set, it has finished
-                    -- computing and we can send the result
-                    if dout_start_fft = '0' and done_fft = '1' then
-                        -- send get signal
-                        get_fft <= '1';
-                        state <= SSEND1;
+                when SRUN1 =>
+                    if done_fft = '1' then
+                        -- wait until fft is done and has finished writing data to memory
+                        -- the start computing FFT
+                        start_fft <= '1';
+                        state <= SRUN2;
+                    end if;
+                when SRUN2 =>
+                    if start_fft = '0' and done_fft = '1' then
+                        -- go back to idle mode, fft is done
+                        state <= SIDLE;
                     end if;
                 when SSEND1 =>
-                    state <= SSEND2;
+                    byte_cnt <= byte_cnt + 1;
+                    if byte_cnt = "01" then
+                        byte_cnt <= (others => '0');
+                        state <= SSEND2;
+                    end if;
                 when SSEND2 =>
                     en_fft <= '0';
 
-                    if busy_i2c = '0' then
-                        -- increment byte counter
+                    if tx_sent_i2c = '1' then
+                        -- if we have sent the byte process next one
                         byte_cnt <= byte_cnt + 1;
-                        byte_cnt_shift := shift_left(byte_cnt, 3);
+                        -- multiply byte count by 8
+                        byte_cnt_shift := shift_left(resize(byte_cnt, 5), 3);
+                        byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
+                        byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
                         -- apply current result data to I2C component
-                        tx_data_i2c <= std_logic_vector(
-                                dout_fft.r(FIXLEN-to_integer(byte_cnt_shift)-1 downto FIXLEN-to_integer(byte_cnt_shift)-8)
-                            );
+                        tx_data_i2c <= std_logic_vector(dout_fft.r(byte_start downto byte_end));
 
                         -- if we have sent 3 bytes then go to next result
                         if byte_cnt = "10" then
@@ -254,15 +256,4 @@ begin
                  din   => din_fft,
                  done  => done_fft,
                  dout  => dout_fft);
-
-    del_start_fft: delay_bit
-        generic map(RSTDEF   => RSTDEF,
-                    DELAYLEN => DELSTARTFFT)
-        port map(rst   => rst,
-                 clk   => clk,
-                 swrst => not RSTDEF,
-                 en    => '1',
-                 din   => din_start_fft,
-                 dout  => dout_start_fft);
-
 end architecture;

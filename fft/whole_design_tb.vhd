@@ -53,7 +53,7 @@ architecture behavioral of whole_design_tb is
     constant RSTDEF: std_logic := '0';
 
     -- Inputs
-    signal rst:     std_logic := '0';
+    signal rst:     std_logic := RSTDEF;
     signal clk:     std_logic := '0';
 
     --BiDirs
@@ -161,20 +161,22 @@ begin
         -- hold reset state for 100 ns.
         wait for clk_period*10;
 
-        rst <= '1';
+        rst <= not RSTDEF;
 
         -- init transmission
         send_start;
 
         -- send correct address
         send_bit('0'); -- address bit 1
-        send_bit('0'); -- address bit 2
-        send_bit('1'); -- address bit 3
+        send_bit('1'); -- address bit 2
+        send_bit('0'); -- address bit 3
         send_bit('0'); -- address bit 4
-        send_bit('1'); -- address bit 5
-        send_bit('1'); -- address bit 6
-        send_bit('1'); -- address bit 7
-        send_bit('1'); -- direction bit
+        send_bit('0'); -- address bit 5
+        send_bit('0'); -- address bit 6
+        send_bit('0'); -- address bit 7
+        send_bit('0'); -- direction bit
+
+        wait_ack;
 
         -- send samples
         for i in 0 to 15 loop
@@ -186,6 +188,21 @@ begin
 
         -- do FFT
         wait for 50*clk_period;
+
+        -- init transmission
+        send_start;
+
+        -- send correct address
+        send_bit('0'); -- address bit 1
+        send_bit('1'); -- address bit 2
+        send_bit('0'); -- address bit 3
+        send_bit('0'); -- address bit 4
+        send_bit('0'); -- address bit 5
+        send_bit('0'); -- address bit 6
+        send_bit('0'); -- address bit 7
+        send_bit('1'); -- direction bit
+
+        wait_ack;
 
         -- receive results
         for i in 0 to 15 loop
@@ -201,6 +218,8 @@ begin
                 send_ack;
             end loop;
         end loop;
+
+        send_stop;
 
         wait;
     end process;
