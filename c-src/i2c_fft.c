@@ -163,7 +163,7 @@ int main(int argc, char * argv[]) {
 
     if(ret)
     {
-        fprintf(stderr, "Failed to read I2C: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to write I2C: %s\n", strerror(errno));
         i2c_close();
         return -1;
     }
@@ -184,7 +184,7 @@ int main(int argc, char * argv[]) {
 
 
     if(ret)
-        fprintf(stderr, "Failed to write: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to read: %s\n", strerror(errno));
 
     i2c_close();
 
