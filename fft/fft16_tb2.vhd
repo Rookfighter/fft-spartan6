@@ -108,7 +108,6 @@ architecture behavioral of fft16_tb2 is
     signal dout:  complex := COMPZERO;
 
     signal dout_results: complex_arr(0 to 15) := (others => COMPZERO);
-    signal hlt: std_logic := '0';
 
     -- convert an unsigned value(4 bit) to a HEX digit (0-F)
     function to_hex_char(val: unsigned) return character is
@@ -158,12 +157,10 @@ begin
     -- Clock process definitions
     clk_process: process
     begin
-        if hlt = '0' then
-            clk <= '0';
-            wait for clk_period/2;
-            clk <= '1';
-            wait for clk_period/2;
-        end if;
+        clk <= '0';
+        wait for clk_period/2;
+        clk <= '1';
+        wait for clk_period/2;
     end process;
 
     -- Stimulus process
@@ -227,9 +224,6 @@ begin
                    "  got:          " & to_hex_str(unsigned(dout_results(i).r))
                    severity error;
         end loop;
-
-        -- halt simulation
-        hlt <= '1';
 
         wait;
     end process;
