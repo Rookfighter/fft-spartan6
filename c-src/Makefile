@@ -22,6 +22,6 @@ clean:
 	@echo "  CC $@"
 	@$(CC) $(CFLAGS) -c $<
 
-i2c_dip_lcd: $(OBJ)
+i2c_fft: $(OBJ)
 	@echo "  LD $@"
 	@$(CC) $(CFLAGS) $(LDFLAGS)-o $@ $(OBJ)
