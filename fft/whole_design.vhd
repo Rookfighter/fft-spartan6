@@ -58,6 +58,8 @@ architecture behavioral of whole_design is
     -- define states for FSM of whole design
     type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2, SSEND3);
     signal state: TState := SIDLE;
+    
+    signal tx_data_tmp: std_logic_vector(7 downto 0) := (others => '0');
 
     -- INPUTS
     -- ======
@@ -88,6 +90,11 @@ architecture behavioral of whole_design is
 
 begin
 
+    -- convert high to Z for i2c send buffer
+    i2c_out: for i in 7 downto 0 generate
+        tx_data_i2c(i) <= 'Z' when tx_data_tmp(i) = '1' else '0';
+    end generate;
+
     process(rst, clk) is
         procedure reset is
         begin
@@ -98,7 +105,7 @@ begin
             sample_cnt <= (others => '0');
 
             -- reset I2C
-            tx_data_i2c <= (others => '0');
+            tx_data_tmp <= (others => '0');
 
             -- reset fft
             en_fft <= '1';
@@ -208,7 +215,7 @@ begin
                         byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
                         byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
                         -- apply current result data to I2C component
-                        tx_data_i2c <= std_logic_vector(dout_fft.r(byte_start downto byte_end));
+                        tx_data_tmp <= std_logic_vector(dout_fft.r(byte_start downto byte_end));
 
                         -- if we have sent 3 bytes then go to next result
                         if byte_cnt = "10" then
