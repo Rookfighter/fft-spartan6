@@ -22,8 +22,8 @@ use ieee.numeric_std.all;
 package fft_helpers is
 
     -- define decimal and fractional length of fixed point numbers
-    constant DECLEN:  natural := 12;
-    constant FRACLEN: natural := 12;
+    constant DECLEN:  natural := 16;
+    constant FRACLEN: natural := 8;
     constant FIXLEN: natural := DECLEN + FRACLEN;
     constant FIXZERO: signed(DECLEN+FRACLEN-1 downto 0) := (others => '0');
 
