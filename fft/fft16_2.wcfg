@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/fabian/develop/fft-spartan6/fft/fft16_tb2_isim_beh1.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/Fabian/Desktop/develop/fft-spartan6/fft/fft16_tb2_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="fft16_tb2" />
             <top_module name="fft_helpers" />
@@ -16,94 +16,89 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="16" />
+   <WVObjectSize size="12" />
    <wvobject fp_name="/fft16_tb2/test_data" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">test_data[0:15]</obj_property>
       <obj_property name="ObjectShortName">test_data[0:15]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fft16_tb2/result_data" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">result_data[0:15]</obj_property>
-      <obj_property name="ObjectShortName">result_data[0:15]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-      <wvobject fp_name="/fft16_tb2/result_data[0]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[0]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[0]</obj_property>
-         <obj_property name="ObjectShortName">result_data[0]</obj_property>
+         <obj_property name="ObjectShortName">test_data[0]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[1]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[1]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[1]</obj_property>
-         <obj_property name="ObjectShortName">result_data[1]</obj_property>
+         <obj_property name="ObjectShortName">test_data[1]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[2]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[2]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[2]</obj_property>
-         <obj_property name="ObjectShortName">result_data[2]</obj_property>
+         <obj_property name="ObjectShortName">test_data[2]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[3]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[3]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[3]</obj_property>
-         <obj_property name="ObjectShortName">result_data[3]</obj_property>
+         <obj_property name="ObjectShortName">test_data[3]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[4]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[4]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[4]</obj_property>
-         <obj_property name="ObjectShortName">result_data[4]</obj_property>
+         <obj_property name="ObjectShortName">test_data[4]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[5]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[5]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[5]</obj_property>
-         <obj_property name="ObjectShortName">result_data[5]</obj_property>
+         <obj_property name="ObjectShortName">test_data[5]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[6]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[6]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[6]</obj_property>
-         <obj_property name="ObjectShortName">result_data[6]</obj_property>
+         <obj_property name="ObjectShortName">test_data[6]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[7]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[7]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[7]</obj_property>
-         <obj_property name="ObjectShortName">result_data[7]</obj_property>
+         <obj_property name="ObjectShortName">test_data[7]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[8]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[8]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[8]</obj_property>
-         <obj_property name="ObjectShortName">result_data[8]</obj_property>
+         <obj_property name="ObjectShortName">test_data[8]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[9]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[9]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[9]</obj_property>
-         <obj_property name="ObjectShortName">result_data[9]</obj_property>
+         <obj_property name="ObjectShortName">test_data[9]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[10]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[10]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[10]</obj_property>
-         <obj_property name="ObjectShortName">result_data[10]</obj_property>
+         <obj_property name="ObjectShortName">test_data[10]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[11]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[11]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[11]</obj_property>
-         <obj_property name="ObjectShortName">result_data[11]</obj_property>
+         <obj_property name="ObjectShortName">test_data[11]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[12]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[12]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[12]</obj_property>
-         <obj_property name="ObjectShortName">result_data[12]</obj_property>
+         <obj_property name="ObjectShortName">test_data[12]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[13]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[13]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[13]</obj_property>
-         <obj_property name="ObjectShortName">result_data[13]</obj_property>
+         <obj_property name="ObjectShortName">test_data[13]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[14]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[14]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[14]</obj_property>
-         <obj_property name="ObjectShortName">result_data[14]</obj_property>
+         <obj_property name="ObjectShortName">test_data[14]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/fft16_tb2/result_data[15]" type="array" db_ref_id="1">
+      <wvobject fp_name="/fft16_tb2/test_data[15]" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">[15]</obj_property>
-         <obj_property name="ObjectShortName">result_data[15]</obj_property>
+         <obj_property name="ObjectShortName">test_data[15]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
    </wvobject>
@@ -233,17 +228,5 @@
          <obj_property name="ObjectShortName">dout_results[15]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-   </wvobject>
-   <wvobject fp_name="/fft16_tb2/hlt" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">hlt</obj_property>
-      <obj_property name="ObjectShortName">hlt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fft16_tb2/clk_period" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">clk_period</obj_property>
-      <obj_property name="ObjectShortName">clk_period</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fft16_tb2/rstdef" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">rstdef</obj_property>
-      <obj_property name="ObjectShortName">rstdef</obj_property>
    </wvobject>
 </wave_config>

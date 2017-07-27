@@ -57,38 +57,10 @@ architecture behavioral of fft16_tb2 is
         to_complex(-3826.0, 0.0)
     );
 
-    -- calculated using online FFT calculator
+    -- result can be calculated using online FFT calculator
     -- https://sooeet.com/math/online-fft-calculator.php
-    --
-    -- Settings:
-    -- Program data:        constant y = 1
-    -- Window function:     No window
-    -- Number of samples:   16 (2^4)
-    -- Y-axis magnitude:    Real
-    -- User data samples:   0.0 3826.0 7071.0 9238.0 10000.0 9238.0 7071.0
-    --                      3826.0 0.0 -3826.0 -7071.0 -9238.0 -10000.0 -9238.0
-    --                      -7071.0 -3826.0
-    constant result_data1: complex_arr(0 to 15) := (
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(16.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0),
-        to_complex(0.0, 0.0)
-    );
 
     signal test_data: complex_arr(0 to 15);
-    signal result_data: complex_arr(0 to 15);
 
     -- Generics
     constant RSTDEF: std_logic := '0';
@@ -138,7 +110,6 @@ architecture behavioral of fft16_tb2 is
 begin
 
     test_data   <= test_data1;
-    result_data <= result_data1;
 
     -- Instantiate the Unit Under Test (UUT)
     uut: fft16
@@ -213,16 +184,6 @@ begin
                 ")";
 
             wait for clk_period;
-        end loop;
-
-        for i in 0 to 15 loop
-            -- assert that results are correct
-            -- only real values are of interest
-            assert dout_results(i).r = result_data(i).r
-                   report LF & "wrong value [" & integer'image(i) & "]" & LF &
-                   "  expected: " & to_hex_str(unsigned(result_data(i).r)) & LF &
-                   "  got:          " & to_hex_str(unsigned(dout_results(i).r))
-                   severity error;
         end loop;
 
         wait;
