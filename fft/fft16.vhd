@@ -3,7 +3,9 @@
 -- Created on: 15 Jul 2017
 --     Author: Fabian Meyer
 --
--- Integration component for 16-point FFT.
+-- Integration component for 16-point FFT. Implements pipelining of data and timing between components.
+-- This architecture is based on the paper of George Slade:
+-- https://www.researchgate.net/publication/235995761_The_Fast_Fourier_Transform_in_Hardware_A_Tutorial_Based_on_an_FPGA_Implementation
 
 library ieee;
 library work;
