@@ -39,6 +39,9 @@
 #define TWSI_BUS "/dev/twsi0"
 
 #define SLV_ADDR 0x20
+#define OPSET    0x01
+#define OPRUN    0x02
+#define OPGET    0x03
 
 static int twsi_device = -1;
 
@@ -106,7 +109,6 @@ int i2c_close () {
     return 0;
 }
 
-#define B2S 48
 static int FFT_VALS[16] = {
         0,
         382,
@@ -127,7 +129,7 @@ static int FFT_VALS[16] = {
 
 
 int main(int argc, char * argv[]) {
-    uint8_t data[B2S];
+    uint8_t data[64];
     int vals[16];
     int ret;
     int i;
@@ -145,8 +147,9 @@ int main(int argc, char * argv[]) {
     }
 
     // first send fft values
+    data[0] = OPSET;
     for(i = 0; i < 15; ++i) {
-        int idx = i*3;
+        int idx = (i*3)+1;
         data[idx] = FFT_VALS[i] >> 16 & 0xff;
         data[idx+1] = FFT_VALS[i] >> 8 & 0xff;
         data[idx+2] = FFT_VALS[i] & 0xff;
@@ -157,10 +160,10 @@ int main(int argc, char * argv[]) {
         printf("  %d\n", FFT_VALS[i]);
     }
 
+    // send values such that FFT can store them in its memory bank
     ret = i2c_read_write(SLV_ADDR,
-        data, B2S,
+        data, 49,
         NULL, 0);
-
     if(ret)
     {
         fprintf(stderr, "Failed to write I2C: %s\n", strerror(errno));
@@ -168,9 +171,24 @@ int main(int argc, char * argv[]) {
         return -1;
     }
 
+    // send the run command for the board
+    data[0] = OPRUN;
+    ret = i2c_read_write(SLV_ADDR,
+        data, 1,
+        NULL, 0);
+
+    usleep(500);
+
+    // send get command to read out results
+    data[0] = OPGET;
+    ret = i2c_read_write(SLV_ADDR,
+        data, 1,
+        NULL, 0);
+
+    // receive values from FPGA
     ret = i2c_read_write(SLV_ADDR,
         NULL, 0,
-        data, B2S);
+        data, 48);
 
     for(i = 0; i < 15; ++i) {
         int idx = i*3;
