@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/fabian/develop/fft-spartan6/fft/i2c_slave_read_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="i2c_slave_read_tb" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="19" />
+   <wave_markers>
+      <marker time="100000000" label="" />
+      <marker time="605000000" label="" />
+      <marker time="2685000000" label="" />
+      <marker time="2955000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/i2c_slave_read_tb/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/swrst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">swrst</obj_property>
+      <obj_property name="ObjectShortName">swrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/en" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/tx_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">tx_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">tx_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/sda" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">sda</obj_property>
+      <obj_property name="ObjectShortName">sda</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/scl" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">scl</obj_property>
+      <obj_property name="ObjectShortName">scl</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/tx_sent" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">tx_sent</obj_property>
+      <obj_property name="ObjectShortName">tx_sent</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/rx_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/rx_recv" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_recv</obj_property>
+      <obj_property name="ObjectShortName">rx_recv</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/busy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">busy</obj_property>
+      <obj_property name="ObjectShortName">busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/prev_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">prev_state</obj_property>
+      <obj_property name="ObjectShortName">prev_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/cnt_timeout" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">cnt_timeout[14:0]</obj_property>
+      <obj_property name="ObjectShortName">cnt_timeout[14:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/rwbit" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rwbit</obj_property>
+      <obj_property name="ObjectShortName">rwbit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/scl_vec" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">scl_vec[1:0]</obj_property>
+      <obj_property name="ObjectShortName">scl_vec[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/sda_vec" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">sda_vec[1:0]</obj_property>
+      <obj_property name="ObjectShortName">sda_vec[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/i2c_slave_read_tb/uut/cnt_bit" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">cnt_bit[2:0]</obj_property>
+      <obj_property name="ObjectShortName">cnt_bit[2:0]</obj_property>
+   </wvobject>
+</wave_config>

@@ -15,20 +15,26 @@ architecture behavior of i2c_slave_write_tb is
     component i2c_slave
     generic(RSTDEF:  std_logic := '0';
             ADDRDEF: std_logic_vector(6 downto 0) := "0100000");
-    port(rst:     in    std_logic;                    -- reset, RSTDEF active
-         clk:     in    std_logic;                    -- clock, rising edge
-         tx_data: in    std_logic_vector(7 downto 0); -- tx, data to send
-         tx_sent: out   std_logic;                    -- tx was sent, high active
-         rx_data: out   std_logic_vector(7 downto 0); -- rx, data received
-         rx_recv: out   std_logic;                    -- rx received, high active
-         busy:    out   std_logic;                    -- busy, high active
-         sda:     inout std_logic;                    -- serial data of I2C
-         scl:     inout std_logic);                   -- serial clock of I2C
+    port(rst:     in    std_logic;                                       -- reset, RSTDEF active
+         clk:     in    std_logic;                                       -- clock, rising edge
+         swrst:   in    std_logic;                                       -- software reset, RSTDEF active
+         en:      in    std_logic;                                       -- enable, high active
+         tx_data: in    std_logic_vector(7 downto 0);                    -- tx, data to send
+         tx_sent: out   std_logic := '0';                                -- tx was sent, high active
+         rx_data: out   std_logic_vector(7 downto 0) := (others => '0'); -- rx, data received
+         rx_recv: out   std_logic := '0';                                -- rx received, high active
+         busy:    out   std_logic := '0';                                -- busy, high active
+         sda:     inout std_logic := 'Z';                                -- serial data of I2C
+         scl:     inout std_logic := 'Z');                               -- serial clock of I2C
     end component;
 
+    constant RSTDEF: std_logic := '0';
+
     --Inputs
-    signal rst:     std_logic := '0';
+    signal rst:     std_logic := RSTDEF;
     signal clk:     std_logic := '0';
+    signal swrst:   std_logic := RSTDEF;
+    signal en:      std_logic := '0';
     signal tx_data: std_logic_vector(7 downto 0) := (others => '0');
 
     --BiDirs
@@ -52,6 +58,8 @@ begin
                     ADDRDEF => "0010111") -- address 0x17
         port map(rst     => rst,
                  clk     => clk,
+                 swrst   => swrst,
+                 en      => en,
                  tx_data => tx_data,
                  tx_sent => tx_sent,
                  rx_data => rx_data,
@@ -78,7 +86,7 @@ begin
             scl <= '0';
             sda <= tosend;
             -- wait for delay element to take over new value
-            wait for 24*clk_period;
+            wait for 25*clk_period;
             -- allow slave to read
             scl <= '1';
             wait for clk_period;
@@ -136,7 +144,9 @@ begin
     begin
         -- hold reset state for 100 ns.
         wait for clk_period*10;
-        rst <= '1';
+        rst   <= not RSTDEF;
+        swrst <= not RSTDEF;
+        en    <= '1';
 
         -- init transmission
         send_start;

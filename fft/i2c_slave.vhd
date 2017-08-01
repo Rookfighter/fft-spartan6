@@ -10,15 +10,17 @@ use ieee.numeric_std.all;
 entity i2c_slave is
     generic(RSTDEF:  std_logic := '0';
             ADDRDEF: std_logic_vector(6 downto 0) := "0100000");
-    port(rst:     in    std_logic;                    -- reset, RSTDEF active
-         clk:     in    std_logic;                    -- clock, rising edge
-         tx_data: in    std_logic_vector(7 downto 0); -- tx, data to send
-         tx_sent: out   std_logic;                    -- tx was sent, high active
-         rx_data: out   std_logic_vector(7 downto 0); -- rx, data received
-         rx_recv: out   std_logic;                    -- rx received, high active
-         busy:    out   std_logic;                    -- busy, high active
-         sda:     inout std_logic;                    -- serial data of I2C
-         scl:     inout std_logic);                   -- serial clock of I2C
+    port(rst:     in    std_logic;                                       -- reset, RSTDEF active
+         clk:     in    std_logic;                                       -- clock, rising edge
+         swrst:   in    std_logic;                                       -- software reset, RSTDEF active
+         en:      in    std_logic;                                       -- enable, high active
+         tx_data: in    std_logic_vector(7 downto 0);                    -- tx, data to send
+         tx_sent: out   std_logic := '0';                                -- tx was sent, high active
+         rx_data: out   std_logic_vector(7 downto 0) := (others => '0'); -- rx, data received
+         rx_recv: out   std_logic := '0';                                -- rx received, high active
+         busy:    out   std_logic := '0';                                -- busy, high active
+         sda:     inout std_logic := 'Z';                                -- serial data of I2C
+         scl:     inout std_logic := 'Z');                               -- serial clock of I2C
 end entity;
 
 architecture behavioral of i2c_slave is
@@ -28,8 +30,8 @@ architecture behavioral of i2c_slave is
             DELAYLEN: natural := 8);
     port(rst:   in  std_logic;   -- reset, RSTDEF active
          clk:   in  std_logic;   -- clock, rising edge
-         swrst: in std_logic;
-         en:    in std_logic;
+         swrst: in  std_logic;   -- software reset, RSTDEF active
+         en:    in  std_logic;   -- enable, high active
          din:   in  std_logic;   -- data in
          dout:  out std_logic);  -- data out
     end component;
@@ -37,6 +39,7 @@ architecture behavioral of i2c_slave is
     -- states for FSM
     type TState is (SIDLE, SADDR, SSEND_ACK1, SSEND_ACK2, SRECV_ACK, SREAD, SWRITE);
     signal state: TState := SIDLE;
+    signal prev_state: TState := SIDLE;
 
     -- constant to define cycles per time unit
     constant CLKPERMS: natural := 24000;
@@ -60,6 +63,8 @@ architecture behavioral of i2c_slave is
 
     -- counter to count bits received / sent
     signal cnt_bit: unsigned(2 downto 0) := (others => '0');
+
+    signal tx_data_t: std_logic_vector(7 downto 0) := (others => '0');
 begin
 
     -- always let master handle scl
@@ -70,6 +75,11 @@ begin
     sda_vec(0) <= sda_del;
     -- always busy if not in idle mode
     busy <= '0' when state = SIDLE else '1';
+    -- always transform 1 to Z
+    -- never put a 1 on SDA
+    tx_data_transform: for i in 7 downto 0 generate
+        tx_data_t(i) <= 'Z' when tx_data(i) = '1' else '0';
+    end generate;
 
     -- delay sda signal by 24 cylces (= 1us)
     delay1: delay_bit
@@ -77,150 +87,174 @@ begin
                     DELAYLEN => 24)
         port map(rst   => rst,
                  clk   => clk,
-                 swrst => not RSTDEF,
-                 en    => '1',
+                 swrst => swrst,
+                 en    => en,
                  din   => sda,
                  dout  => sda_del);
 
     process(clk, rst)
-    begin
-        if rst = RSTDEF then
+        procedure reset is
+        begin
+            -- reset out ports
             tx_sent <= '0';
             rx_data <= (others => '0');
             rx_recv <= '0';
+            -- release sda
             sda <= 'Z';
+            -- go back to idle state
             state <= SIDLE;
+            prev_state <= SIDLE;
+            -- reset timeout counter
             cnt_timeout <= (others => '0');
             data <= (others => '0');
             rwbit <= '0';
+            -- reset scl / sda history
             scl_vec(1) <= '0';
             sda_vec(1) <= '0';
+            -- reset bit counter
             cnt_bit <= (others => '0');
+        end procedure;
+
+    begin
+        if rst = RSTDEF then
+            reset;
         elsif rising_edge(clk) then
-            -- keep track of previous sda and scl (msb)
-            sda_vec(1) <= sda_vec(0);
-            scl_vec(1) <= scl_vec(0);
+            if swrst = RSTDEF then
+                reset;
+            elsif en = '1' then
+                -- keep track of previous sda and scl (msb)
+                sda_vec(1) <= sda_vec(0);
+                scl_vec(1) <= scl_vec(0);
 
-            -- leave sent and recv signals high only one cylce
-            tx_sent <= '0';
-            rx_recv <= '0';
+                -- leave sent and recv signals high for only one cylce
+                tx_sent <= '0';
+                rx_recv <= '0';
 
-            -- check for timeout
-            cnt_timeout <= cnt_timeout + 1;
-            if scl_vec = "01" then
-                -- reset timeout on rising scl
-                cnt_timeout <= (others => '0');
-            elsif to_integer(cnt_timeout) = CLKPERMS then
-                -- timeout is reached go into idle state
-                cnt_timeout <= (others => '0');
-                state <= SIDLE;
-                sda <= 'Z';
-            end if;
+                -- keep track of previous state for timeout
+                prev_state <= state;
 
-            -- compute state machine for i2c slave
-            case state is
-                when SIDLE =>
-                    -- do nothing
-                when SADDR =>
-                    if scl_vec = "01" then
-                        -- set data bit depending on cnt_bit
-                        data(7-to_integer(cnt_bit)) <= sda_vec(0);
-                        cnt_bit <= cnt_bit + 1;
+                -- check for timeout
+                cnt_timeout <= cnt_timeout + 1;
+                if prev_state /= state or state = SIDLE then
+                    -- reset timeout if states have changed or we are in idle mode
+                    cnt_timeout <= (others => '0');
+                elsif to_integer(cnt_timeout) = CLKPERMS then
+                    -- timeout is reached, reset and go into idle state
+                    reset;
+                end if;
 
-                        -- if cnt_bit is full then we have just received last bit
-                        if cnt_bit = "111" then
-                            rwbit <= sda_vec(0);
-                            if data(DATALEN-1 downto 1) = ADDRDEF then
-                                -- address matches ours, acknowledge
-                                state <= SSEND_ACK1;
-                            else
-                                -- address doesn't match ours, ignore
-                                state <= SIDLE;
+                -- compute state machine for i2c slave
+                case state is
+                    when SIDLE =>
+                        -- do nothing, wait for start condition
+                    when SADDR =>
+                        if scl_vec = "01" then
+                            -- set data bit depending on cnt_bit
+                            data(7-to_integer(cnt_bit)) <= sda_vec(0);
+                            cnt_bit <= cnt_bit + 1;
+
+                            -- if cnt_bit is full then we have just received last bit
+                            if cnt_bit = "111" then
+                                rwbit <= sda_vec(0);
+                                if data(DATALEN-1 downto 1) = ADDRDEF then
+                                    -- address matches ours, acknowledge
+                                    state <= SSEND_ACK1;
+                                else
+                                    -- address doesn't match ours, ignore
+                                    state <= SIDLE;
+                                end if;
                             end if;
                         end if;
-                    end if;
-                when SSEND_ACK1 =>
-                    if scl_vec = "10" then
-                        state <= SSEND_ACK2;
-                        sda <= '0';
-                    end if;
-                when SSEND_ACK2 =>
-                    if scl_vec = "10" then
-                        -- check if master requested read or write
-                        if rwbit = '1' then
-                            -- master wants to read
-                            -- write first bit on bus
-                            sda <= tx_data(7);
-                            data <= tx_data;
-                            -- start from one because we already wrote first bit
+                    when SSEND_ACK1 =>
+                        if scl_vec = "10" then
+                            state <= SSEND_ACK2;
+                            sda <= '0';
+                        end if;
+                    when SSEND_ACK2 =>
+                        if scl_vec = "10" then
+                            -- check if master requested read or write
+                            if rwbit = '1' then
+                                -- master wants to read
+                                -- write first bit on bus
+                                sda <= tx_data_t(7);
+                                data <= tx_data_t;
+                                -- start from one because we already wrote first bit
+                                cnt_bit <= "001";
+                                state <= SREAD;
+                            else
+                                -- master wants to write
+                                -- release sda
+                                sda <= 'Z';
+                                cnt_bit <= (others => '0');
+                                state <= SWRITE;
+                            end if;
+                        end if;
+                    when SRECV_ACK =>
+                        if scl_vec = "01" then
+                            if sda_vec(0) /= '0' then
+                                -- received nack: master will send stop cond, but we
+                                -- can simply jump right to idle state
+                                state <= SIDLE;
+                            end if;
+                        elsif scl_vec = "10" then
+                            -- continue read
+                            sda <= tx_data_t(7); -- write first bit on bus
+                            data <= tx_data_t;
+                            -- start from 1 because we alreay transmit first bit
                             cnt_bit <= "001";
                             state <= SREAD;
-                        else
-                            -- master wants to write
-                            -- release sda
-                            sda <= 'Z';
-                            cnt_bit <= (others => '0');
-                            state <= SWRITE;
                         end if;
-                    end if;
-                when SRECV_ACK =>
-                    if scl_vec = "01" then
-                        if sda_vec(0) /= '0' then
-                            -- received nack: master will send stop cond, but we
-                            -- can simply jump right to idle state
-                            state <= SIDLE;
-                        end if;
-                    elsif scl_vec = "10" then
-                        -- continue read
-                        sda <= tx_data(7); -- write first bit on bus
-                        data <= tx_data;
-                        -- start from 1 because we alreay transmit first bit
-                        cnt_bit <= "001";
-                        state <= SREAD;
-                    end if;
-                when SREAD =>
-                    if scl_vec = "10" then
-                        sda <= data(7-to_integer(cnt_bit));
-                        cnt_bit <= cnt_bit + 1;
+                    when SREAD =>
+                        if scl_vec = "10" then
+                            sda <= data(7-to_integer(cnt_bit));
+                            cnt_bit <= cnt_bit + 1;
 
-                        -- if cnt_bit overflowed we finished transmitting last bit
-                        -- note: data is not allowed to contain any 1, only Z or 0
-                        if cnt_bit = "000" then
-                            -- release sda, because we need to listen for ack
-                            -- from master
-                            sda <= 'Z';
-                            state <= SRECV_ACK;
-                            -- notify that we have sent the byte
-                            tx_sent <= '1';
+                            -- if cnt_bit overflowed we finished transmitting last bit
+                            -- note: data is not allowed to contain any 1, only Z or 0
+                            if cnt_bit = "000" then
+                                -- release sda, because we need to listen for ack
+                                -- from master
+                                sda <= 'Z';
+                                state <= SRECV_ACK;
+                                -- notify that we have sent the byte
+                                tx_sent <= '1';
+                            end if;
                         end if;
-                    end if;
-                when SWRITE =>
-                    if scl_vec = "01" then
-                        data(7-to_integer(cnt_bit)) <= sda_vec(0);
-                        cnt_bit <= cnt_bit + 1;
+                    when SWRITE =>
+                        if scl_vec = "01" then
 
-                        -- if cnt_bit is full we have just revceived the last bit
-                        if cnt_bit = "111" then
-                            state <= SSEND_ACK1;
-                            -- apply received byte to out port
-                            rx_data <= data(DATALEN-1 downto 1) & sda_vec(0);
-                            -- notify that we have received a new byte
-                            rx_recv <= '1';
+                            data(7-to_integer(cnt_bit)) <= sda_vec(0);
+                            cnt_bit <= cnt_bit + 1;
+
+                            -- if cnt_bit is full we have just received the last bit
+                            if cnt_bit = "111" then
+                                state <= SSEND_ACK1;
+                                -- apply received byte to out port
+                                rx_data <= data(DATALEN-1 downto 1) & sda_vec(0);
+                                -- notify that we have received a new byte
+                                rx_recv <= '1';
+                            end if;
                         end if;
-                    end if;
-            end case;
+                end case;
 
-            -- check for stop / start condition
-            if scl_vec = "11" and sda_vec = "01" then
-                -- i2c stop condition
-                state <= SIDLE;
-                sda <= 'Z';
-            elsif scl_vec = "11" and sda_vec = "10" then
-                -- i2c start condition / repeated start condition
-                state <= SADDR;
-                cnt_bit <= (others => '0');
+                if state = SWRITE or state = SREAD then
+                    -- check for stop condition
+                    if scl_vec = "11" and sda_vec = "01" then
+                        -- i2c stop condition
+                        state <= SIDLE;
+                        sda <= 'Z';
+                    end if;
+                end if;
+
+                if state = SIDLE or state = SWRITE or state = SREAD then
+                    -- check for start condition
+                    if scl_vec = "11" and sda_vec = "10" then
+                        -- i2c start condition / repeated start condition
+                        state <= SADDR;
+                        cnt_bit <= (others => '0');
+                    end if;
+                end if;
             end if;
-
         end if;
     end process;
 end architecture;
