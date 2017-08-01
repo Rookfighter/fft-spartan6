@@ -88,10 +88,10 @@ begin
             wait for clk_period;
             sda <= tosend;
             -- wait for delay element to take over new value
-            wait for 24*clk_period;
+            wait for 2*24*clk_period;
             -- allow slave to read
             scl <= '1';
-            wait for clk_period;
+            wait for 2*clk_period;
         end procedure;
 
         -- receive a single bit over I2C
@@ -99,9 +99,9 @@ begin
         begin
             scl <= '0';
             sda <= 'Z';
-            wait for clk_period;
+            wait for 2*clk_period;
             scl <= '1';
-            wait for clk_period;
+            wait for 2*clk_period;
         end procedure;
 
         -- sends start / repeated start condition over I2C
@@ -110,7 +110,7 @@ begin
             send_bit('1');
             -- rise sda without changing clk
             sda <= '0';
-            wait for 25*clk_period;
+            wait for 2*25*clk_period;
         end procedure;
 
         -- sends stop condition over I2C
@@ -119,7 +119,7 @@ begin
             send_bit('0');
             -- rise sda without changing clk
             sda <= '1';
-            wait for 25*clk_period;
+            wait for 2*25*clk_period;
         end procedure;
 
         -- wait for an ack from slave over I2C
@@ -128,7 +128,7 @@ begin
             send_bit('Z');
             -- wait additional cycle for slave to release SDA again
             scl <= '0';
-            wait for clk_period;
+            wait for 2*clk_period;
         end procedure;
 
         -- send ack to slave
@@ -143,6 +143,15 @@ begin
             send_bit('1');
         end procedure;
 
+        procedure send_byte(data: std_logic_vector(7 downto 0)) is
+        begin
+            for i in 7 downto 0 loop
+                send_bit(data(i));
+            end loop;
+
+            wait_ack;
+        end;
+
         procedure send_sample(data: signed(FIXLEN-1 downto 0)) is
             variable byte_start: natural := 0;
             variable byte_end: natural := 0;
@@ -151,11 +160,7 @@ begin
                 byte_start := FIXLEN - (i * 8) - 1;
                 byte_end   := FIXLEN - (i * 8) - 8;
 
-                for j in byte_start downto byte_end loop
-                    send_bit(data(j));
-                end loop;
-
-                wait_ack;
+                send_byte(std_logic_vector(data(byte_start downto byte_end)));
             end loop;
         end;
     begin
@@ -166,18 +171,10 @@ begin
 
         -- init transmission
         send_start;
-
         -- send correct address
-        send_bit('0'); -- address bit 1
-        send_bit('1'); -- address bit 2
-        send_bit('0'); -- address bit 3
-        send_bit('0'); -- address bit 4
-        send_bit('0'); -- address bit 5
-        send_bit('0'); -- address bit 6
-        send_bit('0'); -- address bit 7
-        send_bit('0'); -- direction bit
-
-        wait_ack;
+        send_byte("01000000");
+        -- send OP code for reading
+        send_byte("00000001");
 
         -- send samples
         for i in 0 to 15 loop
@@ -187,44 +184,30 @@ begin
         -- terminate transmission
         send_stop;
 
-        -- do FFT
+        wait for 10*clk_period;
+
+        -- init transmission
+        send_start;
+        -- send correct address
+        send_byte("01000000");
+        -- send OP code for running FFT
+        send_byte("00000010");
+        -- terminate transmission
+        send_stop;
+
         wait for 50*clk_period;
 
         -- init transmission
         send_start;
-
         -- send correct address
-        send_bit('0'); -- address bit 1
-        send_bit('1'); -- address bit 2
-        send_bit('0'); -- address bit 3
-        send_bit('0'); -- address bit 4
-        send_bit('0'); -- address bit 5
-        send_bit('0'); -- address bit 6
-        send_bit('0'); -- address bit 7
-        send_bit('1'); -- direction bit
+        send_byte("01000000");
+        -- send OP code for reading results
+        send_byte("00000011");
+        -- repeated start
+        send_start;
+        -- send correct address with read bit
+        send_byte("01000001");
 
-        wait_ack;
-
-        -- two extra bytes for initial empty ones (which initiate communication)
-        recv_bit; -- data bit 1
-        recv_bit; -- data bit 2
-        recv_bit; -- data bit 3
-        recv_bit; -- data bit 4
-        recv_bit; -- data bit 5
-        recv_bit; -- data bit 6
-        recv_bit; -- data bit 7
-        recv_bit; -- data bit 8
-        send_ack;
-
-        recv_bit; -- data bit 1
-        recv_bit; -- data bit 2
-        recv_bit; -- data bit 3
-        recv_bit; -- data bit 4
-        recv_bit; -- data bit 5
-        recv_bit; -- data bit 6
-        recv_bit; -- data bit 7
-        recv_bit; -- data bit 8
-        send_ack;
         -- receive results
         for i in 0 to 15 loop
             for j in 0 to BYTES-1 loop

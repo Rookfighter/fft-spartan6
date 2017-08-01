@@ -55,15 +55,17 @@ architecture behavioral of whole_design is
     end component;
 
     constant FFTEXP: natural := 4;
+
+    -- OP codes for I2C
     constant OPSET: std_logic_vector(7 downto 0) := "00000001";
-    constant OPGET: std_logic_vector(7 downto 0) := "00000010";
-    constant OPRUN: std_logic_vector(7 downto 0) := "00000011";
+    constant OPRUN: std_logic_vector(7 downto 0) := "00000010";
+    constant OPGET: std_logic_vector(7 downto 0) := "00000011";
 
     -- INTERNALS
     -- =========
 
     -- define states for FSM of whole design
-    type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2, SSEND3);
+    type TState is (SIDLE, SRECV1, SRECV2, SRUN1, SRUN2, SSEND1, SSEND2, SSEND3);
     signal state: TState := SIDLE;
 
     -- INPUTS
@@ -136,13 +138,11 @@ begin
 
                 when SIDLE =>
                     -- we have received something
-                    if rx_recv_i2c = '1' then
-                        state <= SRECV;
-
+                    if rx_recv_i2c = '1' and  en_i2c = '1' then
                         case rx_data_i2c is
                             when OPSET =>
                                 -- receive data from master
-                                state <= SRECV;
+                                state <= SRECV1;
                             when OPGET =>
                                 -- send results to master
                                 state <= SSEND1;
@@ -154,11 +154,11 @@ begin
                                 -- do nothing, ignore
                         end case;
                     end if;
-                when SRECV =>
+                when SRECV1 =>
                     -- disable fft until we get next number
                     en_fft <= '0';
 
-                    if rx_recv_i2c = '1' then
+                    if rx_recv_i2c = '1' and  en_i2c = '1' then
                         -- received a byte
                         byte_cnt <= byte_cnt + 1;
                         -- multiply byte count by 8
@@ -180,11 +180,16 @@ begin
 
                             if sample_cnt = "1111" then
                                 -- we have received all samples
-                                state <= SIDLE;
+                                state <= SRECV2;
                                 -- reset sample counter
                                 sample_cnt <= (others => '0');
                             end if;
                         end if;
+                    end if;
+                when SRECV2 =>
+                    -- wait until fft module is done
+                    if done_fft = '1' then
+                        state <= SIDLE;
                     end if;
                 when SRUN1 =>
                     if done_fft = '1' then
@@ -202,14 +207,17 @@ begin
                     -- wait for 2 cycles in this state such that FFT module
                     -- is ready to read data
                     byte_cnt <= byte_cnt + 1;
-                    if byte_cnt = "01" then
-                        byte_cnt <= (others => '0');
+                    if byte_cnt = "10" then
+                        byte_cnt <= "01";
+                        en_fft <= '0';
+                        tx_data_i2c <= std_logic_vector(dout_fft.r(FIXLEN-1 downto FIXLEN-8));
+
                         state <= SSEND2;
                     end if;
                 when SSEND2 =>
                     en_fft <= '0';
 
-                    if tx_sent_i2c = '1' then
+                    if tx_sent_i2c = '1' and  en_i2c = '1' then
                         -- if we have sent the byte process next one
                         byte_cnt <= byte_cnt + 1;
                         -- multiply byte count by 8
@@ -238,7 +246,7 @@ begin
                     end if;
                 when SSEND3 =>
                     -- wait until also last byte was sent
-                    if tx_sent_i2c = '1' then
+                    if tx_sent_i2c = '1' and  en_i2c = '1' then
                         state <= SIDLE;
                     end if;
             end case;

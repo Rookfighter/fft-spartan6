@@ -16,22 +16,29 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="26" />
    <wave_markers>
+      <marker time="5815000000" label="" />
+      <marker time="1095000000" label="" />
       <marker time="100000000" label="" />
-      <marker time="605000000" label="" />
-      <marker time="5035000000" label="" />
-      <marker time="9735000000" label="" />
-      <marker time="16785000000" label="" />
-      <marker time="23835000000" label="" />
-      <marker time="115485000000" label="" />
-      <marker time="115535000000" label="" />
-      <marker time="116045000000" label="" />
-      <marker time="119795000000" label="" />
-      <marker time="121055000000" label="" />
-      <marker time="122315000000" label="" />
-      <marker time="123575000000" label="" />
-      <marker time="138715000000" label="" />
+      <marker time="5715000000" label="" />
+      <marker time="14395000000" label="" />
+      <marker time="19015000000" label="" />
+      <marker time="23615000000" label="" />
+      <marker time="28235000000" label="" />
+      <marker time="32835000000" label="" />
+      <marker time="231095000000" label="" />
+      <marker time="232615000000" label="" />
+      <marker time="233715000000" label="" />
+      <marker time="238335000000" label="" />
+      <marker time="9795000000" label="" />
+      <marker time="242435000000" label="" />
+      <marker time="242965000000" label="" />
+      <marker time="243955000000" label="" />
+      <marker time="245455000000" label="" />
+      <marker time="250075000000" label="" />
+      <marker time="254155000000" label="" />
+      <marker time="260295000000" label="" />
    </wave_markers>
    <wvobject fp_name="/whole_design_tb/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>
@@ -92,6 +99,16 @@
    <wvobject fp_name="/whole_design_tb/uut/busy_i2c" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">busy_i2c</obj_property>
       <obj_property name="ObjectShortName">busy_i2c</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/en_i2c" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en_i2c</obj_property>
+      <obj_property name="ObjectShortName">en_i2c</obj_property>
+   </wvobject>
+   <wvobject fp_name="/whole_design_tb/uut/i2c/state" type="other" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+      <obj_property name="label">state_i2c</obj_property>
    </wvobject>
    <wvobject fp_name="/whole_design_tb/uut/en_fft" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">en_fft</obj_property>
@@ -215,11 +232,5 @@
          <obj_property name="ObjectShortName">bank[15]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-   </wvobject>
-   <wvobject fp_name="/whole_design_tb/uut/i2c/state" type="other" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">state</obj_property>
-      <obj_property name="ObjectShortName">state</obj_property>
-      <obj_property name="label">state_i2c</obj_property>
    </wvobject>
 </wave_config>
