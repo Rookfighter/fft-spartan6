@@ -26,15 +26,17 @@ architecture behavioral of whole_design is
     component i2c_slave
     generic(RSTDEF:  std_logic := '0';
            ADDRDEF: std_logic_vector(6 downto 0) := "0100000");
-    port(rst:     in    std_logic;                    -- reset, RSTDEF active
-         clk:     in    std_logic;                    -- clock, rising edge
-         tx_data: in    std_logic_vector(7 downto 0); -- tx, data to send
-         tx_sent: out   std_logic;                    -- tx was sent, high active
-         rx_data: out   std_logic_vector(7 downto 0); -- rx, data received
-         rx_recv: out   std_logic;                    -- rx received, high active
-         busy:    out   std_logic;                    -- busy, high active
-         sda:     inout std_logic;                    -- serial data of I2C
-         scl:     inout std_logic);                   -- serial clock of I2C
+    port(rst:     in    std_logic;                                       -- reset, RSTDEF active
+         clk:     in    std_logic;                                       -- clock, rising edge
+         swrst:   in    std_logic;                                       -- software reset, RSTDEF active
+         en:      in    std_logic;                                       -- enable, high active
+         tx_data: in    std_logic_vector(7 downto 0);                    -- tx, data to send
+         tx_sent: out   std_logic := '0';                                -- tx was sent, high active
+         rx_data: out   std_logic_vector(7 downto 0) := (others => '0'); -- rx, data received
+         rx_recv: out   std_logic := '0';                                -- rx received, high active
+         busy:    out   std_logic := '0';                                -- busy, high active
+         sda:     inout std_logic := 'Z';                                -- serial data of I2C
+         scl:     inout std_logic := 'Z');                               -- serial clock of I2C
     end component;
 
     -- import fft16 component
@@ -53,13 +55,16 @@ architecture behavioral of whole_design is
     end component;
 
     constant FFTEXP: natural := 4;
+    constant OPSET: std_logic_vector(7 downto 0) := "00000001";
+    constant OPGET: std_logic_vector(7 downto 0) := "00000010";
+    constant OPRUN: std_logic_vector(7 downto 0) := "00000011";
+
+    -- INTERNALS
     -- =========
 
     -- define states for FSM of whole design
     type TState is (SIDLE, SRECV, SRUN1, SRUN2, SSEND1, SSEND2, SSEND3);
     signal state: TState := SIDLE;
-    
-    signal tx_data_tmp: std_logic_vector(7 downto 0) := (others => '0');
 
     -- INPUTS
     -- ======
@@ -69,6 +74,7 @@ architecture behavioral of whole_design is
 
     -- send buffer for I2C
     signal tx_data_i2c: std_logic_vector(7 downto 0) := (others => '0');
+    signal en_i2c: std_logic := '0';
 
     signal en_fft:     std_logic := '1';
     signal start_fft:  std_logic := '0';
@@ -90,11 +96,6 @@ architecture behavioral of whole_design is
 
 begin
 
-    -- convert high to Z for i2c send buffer
-    i2c_out: for i in 7 downto 0 generate
-        tx_data_i2c(i) <= 'Z' when tx_data_tmp(i) = '1' else '0';
-    end generate;
-
     process(rst, clk) is
         procedure reset is
         begin
@@ -105,7 +106,8 @@ begin
             sample_cnt <= (others => '0');
 
             -- reset I2C
-            tx_data_tmp <= (others => '0');
+            tx_data_i2c <= (others => '0');
+            en_i2c  <= '0';
 
             -- reset fft
             en_fft <= '1';
@@ -127,38 +129,37 @@ begin
             start_fft <= '0';
             get_fft <= '0';
             set_fft <= '0';
+            -- divide frequency, only enable I2C every second cycle
+            en_i2c <= not en_i2c;
 
             case state is
+
                 when SIDLE =>
                     -- we have received something
                     if rx_recv_i2c = '1' then
                         state <= SRECV;
 
-                        en_fft <= '0';
-                        byte_cnt <= byte_cnt + 1;
-                        -- multiply byte count by 8
-                        byte_cnt_shift := shift_left(resize(byte_cnt, 5), 3);
-                        byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
-                        byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
-                        -- write rx of I2C to din of FFT
-                        din_fft.r( byte_start downto byte_end) <= signed(rx_data_i2c);
-                    end if;
-
-                    -- we have sent something
-                    -- first byte is without any information
-                    -- it just indicates that someone wants to read
-                    if tx_sent_i2c = '1' then
-                        -- send get signal
-                        get_fft <= '1';
-                        state <= SSEND1;
+                        case rx_data_i2c is
+                            when OPSET =>
+                                -- receive data from master
+                                state <= SRECV;
+                            when OPGET =>
+                                -- send results to master
+                                state <= SSEND1;
+                                get_fft <= '1';
+                            when OPRUN =>
+                                -- run FFT on data we have
+                                state <= SRUN1;
+                            when others =>
+                                -- do nothing, ignore
+                        end case;
                     end if;
                 when SRECV =>
                     -- disable fft until we get next number
                     en_fft <= '0';
 
                     if rx_recv_i2c = '1' then
-                        -- received another byte
-
+                        -- received a byte
                         byte_cnt <= byte_cnt + 1;
                         -- multiply byte count by 8
                         byte_cnt_shift := shift_left(resize(byte_cnt, 5), 3);
@@ -179,8 +180,7 @@ begin
 
                             if sample_cnt = "1111" then
                                 -- we have received all samples
-                                -- go into computation mode
-                                state <= SRUN1;
+                                state <= SIDLE;
                                 -- reset sample counter
                                 sample_cnt <= (others => '0');
                             end if;
@@ -199,6 +199,8 @@ begin
                         state <= SIDLE;
                     end if;
                 when SSEND1 =>
+                    -- wait for 2 cycles in this state such that FFT module
+                    -- is ready to read data
                     byte_cnt <= byte_cnt + 1;
                     if byte_cnt = "01" then
                         byte_cnt <= (others => '0');
@@ -215,7 +217,7 @@ begin
                         byte_start := FIXLEN-to_integer(byte_cnt_shift)-1;
                         byte_end := FIXLEN-to_integer(byte_cnt_shift)-8;
                         -- apply current result data to I2C component
-                        tx_data_tmp <= std_logic_vector(dout_fft.r(byte_start downto byte_end));
+                        tx_data_i2c <= std_logic_vector(dout_fft.r(byte_start downto byte_end));
 
                         -- if we have sent 3 bytes then go to next result
                         if byte_cnt = "10" then
@@ -248,6 +250,8 @@ begin
                     ADDRDEF => "0100000")
         port map(rst     => rst,
                  clk     => clk,
+                 swrst   => not RSTDEF,
+                 en      => en_i2c,
                  tx_data => tx_data_i2c,
                  tx_sent => tx_sent_i2c,
                  rx_data => rx_data_i2c,
